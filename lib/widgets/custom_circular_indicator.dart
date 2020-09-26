@@ -9,8 +9,12 @@ class CustomCircularIndicator extends StatelessWidget {
       data: ThemeData(accentColor: ColorHelper.darkBlue),
       child: Padding(
         padding: const EdgeInsets.all(Dimensions.size10),
-        child: CircularProgressIndicator(
-          backgroundColor: ColorHelper.lightBlue,
+        child: Container(
+          height: Dimensions.size30,
+          width: Dimensions.size30,
+          child: CircularProgressIndicator(
+            backgroundColor: ColorHelper.lightBlue,
+          ),
         ),
       ),
     );

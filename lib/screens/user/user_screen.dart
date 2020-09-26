@@ -4,6 +4,7 @@ import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/authenticate/register_form.dart';
 import 'package:acoustic_event_detector/widgets/custom_decorated_grey_container.dart';
+import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/user/info_widget.dart';
 import 'package:acoustic_event_detector/widgets/user/row_buttons_widget.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,18 @@ class _UserScreenState extends State<UserScreen> {
               RowButtonsWidget(
                 rights: _user.rights,
                 firstButtonOnPressed: () => setState(() => _addUser = true),
-                secondButtonOnPressed: () async => _authCubit.logOutUser(),
+                secondButtonOnPressed: () async {
+                  final result = await showDialog(
+                    context: context,
+                    builder: (context) => CustomPlatformAlertDialog(
+                      title: S.current.log_out_question,
+                      oneOptionOnly: false,
+                    ),
+                  );
+                  if (result == CustomAction.First) {
+                    _authCubit.logOutUser();
+                  }
+                },
               ),
             ],
           ),

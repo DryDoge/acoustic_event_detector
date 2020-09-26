@@ -9,7 +9,7 @@ import './data/repositories/auth_repository.dart';
 import './screens/loading_screen.dart';
 import './screens/home_screen.dart';
 import './screens/authenticate/authenticate_screen.dart';
-import './widgets/platform_alert_dialog.dart';
+import 'widgets/custom_platform_alert_dialog.dart';
 import './utils/color_helper.dart';
 import './data/models/user.dart';
 import './generated/l10n.dart';
@@ -94,7 +94,10 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
         if (state is AuthError) {
           showDialog(
             context: context,
-            builder: (context) => PlatformAlertDialog('Error', state.message),
+            builder: (context) => CustomPlatformAlertDialog(
+              title: S.current.register_error_default,
+              message: state.message,
+            ),
           );
         }
       },

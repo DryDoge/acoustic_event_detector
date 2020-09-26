@@ -30,7 +30,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageCode" : MessageLookupByLibrary.simpleMessage("en"),
     "log_in" : MessageLookupByLibrary.simpleMessage("Log in"),
     "log_out" : MessageLookupByLibrary.simpleMessage("Log out"),
+    "log_out_question" : MessageLookupByLibrary.simpleMessage("Do you really want to log out?"),
     "new_user" : MessageLookupByLibrary.simpleMessage("Add user"),
+    "no" : MessageLookupByLibrary.simpleMessage("No"),
+    "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "password" : MessageLookupByLibrary.simpleMessage("Password"),
     "register" : MessageLookupByLibrary.simpleMessage("Register"),
     "register_email_info" : MessageLookupByLibrary.simpleMessage("Enter an email"),
@@ -40,11 +43,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "register_password_error_short" : MessageLookupByLibrary.simpleMessage("Password is too short"),
     "register_password_info_not_match" : MessageLookupByLibrary.simpleMessage("Enter passwords again"),
     "register_password_info_short" : MessageLookupByLibrary.simpleMessage("Enter a password 6+ chars long"),
+    "register_success" : MessageLookupByLibrary.simpleMessage("An user was created"),
     "rights" : MessageLookupByLibrary.simpleMessage("Rights"),
     "rights_all" : MessageLookupByLibrary.simpleMessage("All"),
     "rights_basic" : MessageLookupByLibrary.simpleMessage("Basic"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Sensors"),
+    "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("User with this email is disabled"),
+    "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("User with this email does not exist"),
+    "sign_in_wrong_email" : MessageLookupByLibrary.simpleMessage("Email address is invalid"),
+    "sign_in_wrong_pass" : MessageLookupByLibrary.simpleMessage("Password is wrong"),
     "user" : MessageLookupByLibrary.simpleMessage("User"),
-    "user_create_new" : MessageLookupByLibrary.simpleMessage("Create a new user")
+    "user_create_new" : MessageLookupByLibrary.simpleMessage("Create a new user"),
+    "user_create_new_now" : MessageLookupByLibrary.simpleMessage("Creating a new user..."),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes")
   };
 }

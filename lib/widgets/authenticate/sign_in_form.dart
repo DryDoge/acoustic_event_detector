@@ -14,16 +14,12 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
   final FocusNode _focusNode = FocusNode();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _email = '';
   String _password = '';
-
-  void submitCredentials(BuildContext context, String email, String password) {
-    final authCubit = context.bloc<AuthCubit>();
-    authCubit.authenticateUser(email, password);
-  }
+  AuthCubit _authCubit;
 
   @override
   void dispose() {
@@ -33,8 +29,13 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _authCubit = context.bloc<AuthCubit>();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: Dimensions.size40,
@@ -59,22 +60,20 @@ class _SignInFormState extends State<SignInForm> {
           ),
           padding: const EdgeInsets.all(Dimensions.size10),
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 SizedBox(height: Dimensions.size20),
                 TextFormField(
-                  style: Styles.darkBlueRegular20,
                   controller: _emailController,
                   textInputAction: TextInputAction.next,
+                  validator: (value) =>
+                      value.isEmpty ? S.current.register_email_info : null,
                   decoration: InputDecoration(
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: ColorHelper.darkBlue),
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: ColorHelper.mediumBlue),
-                    ),
                     labelText: S.current.email,
-                    labelStyle: Styles.mediumBlueBold20,
                     focusColor: ColorHelper.darkBlue,
                   ),
                   cursorColor: ColorHelper.darkBlue,
@@ -84,35 +83,37 @@ class _SignInFormState extends State<SignInForm> {
                   onFieldSubmitted: (value) =>
                       FocusScope.of(context).requestFocus(_focusNode),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: Dimensions.size20),
                 TextFormField(
                   focusNode: _focusNode,
-                  style: Styles.darkBlueRegular20,
                   controller: _passwordController,
+                  validator: (value) => value.length < 6
+                      ? S.current.register_password_info_short
+                      : null,
                   decoration: InputDecoration(
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: ColorHelper.darkBlue),
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: ColorHelper.mediumBlue),
-                    ),
                     labelText: S.current.password,
-                    labelStyle: Styles.mediumBlueBold20,
                   ),
                   cursorColor: ColorHelper.darkBlue,
                   obscureText: true,
                   onChanged: (value) {
                     setState(() => _password = value.trim());
                   },
-                  onFieldSubmitted: (_) =>
-                      submitCredentials(context, _email, _password),
+                  onFieldSubmitted: (_) {
+                    if (_formKey.currentState.validate()) {
+                      _authCubit.authenticateUser(_email, _password);
+                    }
+                  },
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: Dimensions.size20),
                 RaisedButton(
-                  onPressed: () =>
-                      submitCredentials(context, _email, _password),
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _authCubit.authenticateUser(_email, _password);
+                    }
+                  },
                   color: ColorHelper.mediumBlue,
                   child: Text(
                     S.current.log_in,

@@ -53,6 +53,36 @@ class S {
     );
   }
 
+  /// `Ok`
+  String get ok {
+    return Intl.message(
+      'Ok',
+      name: 'ok',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `History`
   String get history {
     return Intl.message(
@@ -203,11 +233,71 @@ class S {
     );
   }
 
+  /// `Creating a new user...`
+  String get user_create_new_now {
+    return Intl.message(
+      'Creating a new user...',
+      name: 'user_create_new_now',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Register`
   String get register {
     return Intl.message(
       'Register',
       name: 'register',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you really want to log out?`
+  String get log_out_question {
+    return Intl.message(
+      'Do you really want to log out?',
+      name: 'log_out_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password is wrong`
+  String get sign_in_wrong_pass {
+    return Intl.message(
+      'Password is wrong',
+      name: 'sign_in_wrong_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User with this email does not exist`
+  String get sign_in_no_user {
+    return Intl.message(
+      'User with this email does not exist',
+      name: 'sign_in_no_user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User with this email is disabled`
+  String get sign_in_disabled_user {
+    return Intl.message(
+      'User with this email is disabled',
+      name: 'sign_in_disabled_user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email address is invalid`
+  String get sign_in_wrong_email {
+    return Intl.message(
+      'Email address is invalid',
+      name: 'sign_in_wrong_email',
       desc: '',
       args: [],
     );
@@ -278,6 +368,16 @@ class S {
     return Intl.message(
       'Try again later',
       name: 'register_info_default',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An user was created`
+  String get register_success {
+    return Intl.message(
+      'An user was created',
+      name: 'register_success',
       desc: '',
       args: [],
     );

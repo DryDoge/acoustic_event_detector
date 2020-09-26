@@ -30,7 +30,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageCode" : MessageLookupByLibrary.simpleMessage("cs"),
     "log_in" : MessageLookupByLibrary.simpleMessage("Přihlásit se"),
     "log_out" : MessageLookupByLibrary.simpleMessage("Odhlásit se"),
+    "log_out_question" : MessageLookupByLibrary.simpleMessage("Naozaj se chcete odhlásit?"),
     "new_user" : MessageLookupByLibrary.simpleMessage("Přidej uživatele"),
+    "no" : MessageLookupByLibrary.simpleMessage("Ne"),
+    "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "password" : MessageLookupByLibrary.simpleMessage("Heslo"),
     "register" : MessageLookupByLibrary.simpleMessage("Vytvořit"),
     "register_email_info" : MessageLookupByLibrary.simpleMessage("Zadejte email"),
@@ -40,11 +43,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "register_password_error_short" : MessageLookupByLibrary.simpleMessage("Heslo je príliž krátke"),
     "register_password_info_not_match" : MessageLookupByLibrary.simpleMessage("Zadejte hesla znova"),
     "register_password_info_short" : MessageLookupByLibrary.simpleMessage("Heslo musí mít alespoň 6+ znaků"),
+    "register_success" : MessageLookupByLibrary.simpleMessage("Uživatel byl vytvořen"),
     "rights" : MessageLookupByLibrary.simpleMessage("Práva"),
     "rights_all" : MessageLookupByLibrary.simpleMessage("Všechna"),
     "rights_basic" : MessageLookupByLibrary.simpleMessage("Základní"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Senzory"),
+    "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("Uživatel je vypnutej"),
+    "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("Uživatel neexistuje"),
+    "sign_in_wrong_email" : MessageLookupByLibrary.simpleMessage("Zadaný email není validný"),
+    "sign_in_wrong_pass" : MessageLookupByLibrary.simpleMessage("Špatné heslo"),
     "user" : MessageLookupByLibrary.simpleMessage("Uživatel"),
-    "user_create_new" : MessageLookupByLibrary.simpleMessage("Vytvořit nového uživatele")
+    "user_create_new" : MessageLookupByLibrary.simpleMessage("Vytvořit nového uživatele"),
+    "user_create_new_now" : MessageLookupByLibrary.simpleMessage("Vytvářim nového uživatele..."),
+    "yes" : MessageLookupByLibrary.simpleMessage("Ano")
   };
 }

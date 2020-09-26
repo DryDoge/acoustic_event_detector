@@ -2,7 +2,6 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/authenticate/sign_in_form.dart';
-import '../../widgets/custom_app_bar.dart';
 
 class AuthenticateScreen extends StatelessWidget {
   static const routeName = '/authenticate';
