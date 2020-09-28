@@ -54,22 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.place),
-              title: Text(_title),
+              label: _title,
               backgroundColor: ColorHelper.lightBlue,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings_input_antenna),
-              title: Text(_title),
+              label: _title,
               backgroundColor: ColorHelper.lightBlue,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.history),
-              title: Text(_title),
+              label: _title,
               backgroundColor: ColorHelper.lightBlue,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
-              title: Text(_title),
+              label: _title,
               backgroundColor: ColorHelper.lightBlue,
             ),
           ],

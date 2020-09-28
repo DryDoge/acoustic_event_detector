@@ -13,15 +13,18 @@ class CustomPlatformAlertDialog extends StatelessWidget {
   final String _title;
   final String _message;
   final bool _oneOptionOnly;
+  final bool _onlySecondImportant;
 
   CustomPlatformAlertDialog({
     Key key,
     @required String title,
     String message,
     bool oneOptionOnly,
+    bool onlySecondImportatn,
   })  : this._title = title,
         this._message = message,
         this._oneOptionOnly = oneOptionOnly ?? true,
+        this._onlySecondImportant = onlySecondImportatn ?? false,
         super(key: key);
 
   @override
@@ -75,7 +78,9 @@ class CustomPlatformAlertDialog extends StatelessWidget {
                     FlatButton(
                       child: Text(
                         S.current.yes,
-                        style: Styles.defaultGreyRegular18,
+                        style: _onlySecondImportant
+                            ? Styles.defaultGreyRegular18
+                            : Styles.darkBlueRegular18,
                       ),
                       onPressed: () =>
                           Navigator.pop(context, CustomAction.First),

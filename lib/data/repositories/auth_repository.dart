@@ -9,7 +9,6 @@ import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:acoustic_event_detector/data/models/user.dart' as model;
-import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {

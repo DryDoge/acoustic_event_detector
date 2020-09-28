@@ -1,68 +1,47 @@
+import 'package:acoustic_event_detector/data/models/sensor.dart';
+import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
+import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class SensorsScreen extends StatelessWidget {
+  final SensorsRepository _sensorsRepository = SensorsRepository();
+
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
-  }
+    return Provider<SensorsRepository>.value(
+      value: _sensorsRepository,
+      builder: (context, child) => StreamBuilder<QuerySnapshot>(
+        stream: _sensorsRepository.sensors,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.hasData) {
+            final List<Sensor> _sensors = snapshot.data.docs
+                .map((data) => Sensor.fromJson(data.data()))
+                .toList();
 
-  Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('baby').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return CircularProgressIndicator();
-
-        return _buildList(context, snapshot.data.docs);
-      },
-    );
-  }
-
-  Widget _buildList(
-      BuildContext context, List<QueryDocumentSnapshot> snapshot) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, QueryDocumentSnapshot data) {
-    final record = Record.fromSnapshot(data);
-
-    return Padding(
-      key: ValueKey(record.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ListTile(
-          title: Text(record.name),
-          trailing: Text(record.votes.toString()),
-          onTap: () => record.reference.update(
-            {'votes': FieldValue.increment(1)},
-          ),
-        ),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SensorsList(sensors: _sensors),
+                FlatButton(
+                  onPressed: () async {
+                    await _sensorsRepository.addSensor(
+                      id: '1',
+                      latitude: 10.0,
+                      longitude: 11.11,
+                    );
+                  },
+                  child: Text('Add Sensor'),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
-}
-
-class Record {
-  final String name;
-  final int votes;
-  final DocumentReference reference;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['votes'] != null),
-        name = map['name'],
-        votes = map['votes'];
-
-  Record.fromSnapshot(QueryDocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-
-  @override
-  String toString() => "Record<$name:$votes>";
 }
