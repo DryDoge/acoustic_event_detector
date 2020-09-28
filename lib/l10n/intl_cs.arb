@@ -34,5 +34,9 @@
   "register_email_info": "Zadejte email",
   "register_error_default": "Něco se pokazilo",
   "register_info_default": "Opakujte později",
-  "register_success": "Uživatel byl vytvořen"
+  "register_success": "Uživatel byl vytvořen",
+  "register_email_already_exists_error": "Email se již používa",
+  "register_regirstration_disabled_error": "Registrace je vypnuta",
+  "register_too_many_requests_error": "Príliš mnoho požadavků",
+  "register_user_not_created": "Uživatel nebyl vytvořen"
 }

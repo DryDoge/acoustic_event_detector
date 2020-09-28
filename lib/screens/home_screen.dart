@@ -51,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: ColorHelper.darkBlue,
           unselectedItemColor: ColorHelper.grey2,
-          elevation: 0.0,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.place),

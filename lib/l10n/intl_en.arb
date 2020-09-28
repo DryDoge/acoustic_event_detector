@@ -34,5 +34,9 @@
   "register_email_info": "Enter an email",
   "register_error_default": "Something went wrong",
   "register_info_default": "Try again later",
-  "register_success": "An user was created"
+  "register_success": "An user wasAn user was not created created",
+  "register_email_already_exists_error": "The email is already in use",
+  "register_regirstration_disabled_error": "The registration is disabled",
+  "register_too_many_requests_error": "Too many requests",
+  "register_user_not_created": "An user was not created"
 }

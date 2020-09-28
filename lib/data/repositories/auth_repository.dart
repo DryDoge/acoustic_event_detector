@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:acoustic_event_detector/data/admin_dao.dart';
+import 'package:acoustic_event_detector/data/models/custom_exception.dart';
 import 'package:acoustic_event_detector/data/user_dao.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/firebase_const.dart';
@@ -47,7 +48,7 @@ class AuthRepository {
           errorMessage = S.current.register_info_default;
       }
 
-      throw errorMessage;
+      throw CustomException(errorMessage);
     }
   }
 
@@ -76,54 +77,86 @@ class AuthRepository {
     return model.User(uid: id, rights: rights, email: email);
   }
 
-  String prepareUrl(String option) {
-    return 'https://identitytoolkit.googleapis.com/v1/accounts:$option?key=AIzaSyDoGd89bdD-Egmet_l2tEOaNzaxvk08UY0';
+  Future<void> deleteUser(String token) async {
+    final response = await http.post(
+      FirebaseConst.deleteUrl(),
+      body: json.encode(
+        {FirebaseConst.tokenField: token},
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (responseData[FirebaseConst.errorField] != null) {
+      final String error =
+          responseData[FirebaseConst.errorField]['message'] as String;
+      String errorMessage;
+      switch (error) {
+        case FirebaseConst.errorInvalidToken:
+          errorMessage = S.current.register_error_default;
+          break;
+        case FirebaseConst.errorUserNotFound:
+          errorMessage = S.current.register_error_default;
+          break;
+        default:
+          errorMessage = error;
+      }
+      throw CustomException(errorMessage);
+    }
   }
 
-  Future<bool> registerWithEmailAndPassword({
+  Future<void> registerWithEmailAndPassword({
     @required String email,
     @required String password,
     @required int rights,
   }) async {
-    try {
-      final response = await http.post(
-        prepareUrl('signUp'),
-        body: json.encode(
-          {
-            'email': email,
-            'password': password,
-          },
-        ),
+    final response = await http.post(
+      FirebaseConst.signUpUrl(),
+      body: json.encode(
+        {
+          FirebaseConst.emailField: email,
+          FirebaseConst.passwordField: password,
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (responseData[FirebaseConst.errorField] == null) {
+      final String _email = responseData[FirebaseConst.emailField];
+      final String _userId = responseData[FirebaseConst.uidField];
+      final String _token = responseData[FirebaseConst.tokenField];
+
+      final bool result = await AdminDao().createUser(
+        userId: _userId,
+        rights: rights,
+        email: _email,
       );
 
-      final responseData = json.decode(response.body);
-
-      if (responseData['error'] == null) {
-        final String _email = responseData['email'];
-        final String _userId = responseData['localId'];
-        final String _token = responseData['idToken'];
-
-        final bool result = await AdminDao().createUser(
-          userId: _userId,
-          rights: rights,
-          email: _email,
-        );
-
-        if (result) {
-          return Future.value(result);
-        }
-
-        await http.post(
-          prepareUrl('delete'),
-          body: json.encode(
-            {'idToken': _token},
-          ),
-        );
+      if (result) {
+        return;
       }
-      return Future.value(false);
-    } catch (e) {
-      print(e.toString());
-      return Future.value(false);
+
+      await deleteUser(_token);
+      throw CustomException(S.current.register_user_not_created);
+    } else {
+      final String error =
+          responseData[FirebaseConst.errorField]['message'] as String;
+      String errorMessage;
+      switch (error) {
+        case FirebaseConst.errorEmailAlreadyExists:
+          errorMessage = S.current.register_email_already_exists_error;
+          break;
+        case FirebaseConst.errorRegistrationDisabled:
+          errorMessage = S.current.register_regirstration_disabled_error;
+          break;
+        case FirebaseConst.errorTooManyRequests:
+          errorMessage = S.current.register_too_many_requests_error;
+          break;
+        default:
+          errorMessage = S.current.register_error_default;
+      }
+      throw CustomException(errorMessage);
     }
   }
 }

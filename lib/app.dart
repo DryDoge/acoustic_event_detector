@@ -1,18 +1,17 @@
+import 'package:acoustic_event_detector/data/models/user.dart';
+import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
+import 'package:acoustic_event_detector/generated/l10n.dart';
+import 'package:acoustic_event_detector/screens/authenticate/authenticate_screen.dart';
+import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
+import 'package:acoustic_event_detector/screens/home_screen.dart';
+import 'package:acoustic_event_detector/screens/loading_screen.dart';
+import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import './data/blocs/cubit/auth_cubit.dart';
-import './data/repositories/auth_repository.dart';
-import './screens/loading_screen.dart';
-import './screens/home_screen.dart';
-import './screens/authenticate/authenticate_screen.dart';
-import 'widgets/custom_platform_alert_dialog.dart';
-import './utils/color_helper.dart';
-import './data/models/user.dart';
-import './generated/l10n.dart';
 
 class App extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -20,7 +19,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        backgroundColor: ColorHelper.white,
+        primaryColor: ColorHelper.darkBlue,
+        unselectedWidgetColor: ColorHelper.defaultGrey,
+        iconTheme: IconThemeData(color: ColorHelper.defaultGrey),
       ),
       onGenerateTitle: (context) => S.current.appName,
       supportedLocales: S.delegate.supportedLocales,

@@ -373,11 +373,51 @@ class S {
     );
   }
 
-  /// `An user was created`
+  /// `An user wasAn user was not created created`
   String get register_success {
     return Intl.message(
-      'An user was created',
+      'An user wasAn user was not created created',
       name: 'register_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The email is already in use`
+  String get register_email_already_exists_error {
+    return Intl.message(
+      'The email is already in use',
+      name: 'register_email_already_exists_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The registration is disabled`
+  String get register_regirstration_disabled_error {
+    return Intl.message(
+      'The registration is disabled',
+      name: 'register_regirstration_disabled_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Too many requests`
+  String get register_too_many_requests_error {
+    return Intl.message(
+      'Too many requests',
+      name: 'register_too_many_requests_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An user was not created`
+  String get register_user_not_created {
+    return Intl.message(
+      'An user was not created',
+      name: 'register_user_not_created',
       desc: '',
       args: [],
     );

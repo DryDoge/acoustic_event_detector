@@ -31,6 +31,7 @@ class InfoWidget extends StatelessWidget {
                   child: Icon(
                     Icons.person,
                     color: ColorHelper.darkBlue,
+                    size: Dimensions.size30,
                   ),
                 ),
                 Text(
@@ -54,6 +55,7 @@ class InfoWidget extends StatelessWidget {
                   child: Icon(
                     Icons.settings_applications,
                     color: ColorHelper.darkBlue,
+                    size: Dimensions.size30,
                   ),
                 ),
                 Text(

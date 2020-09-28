@@ -1,8 +1,8 @@
+import 'package:acoustic_event_detector/data/models/custom_exception.dart';
 import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../models/user.dart' as model;
+import 'package:acoustic_event_detector/data/models/user.dart' as model;
 
 part 'auth_state.dart';
 
@@ -20,8 +20,10 @@ class AuthCubit extends Cubit<AuthState> {
       await _authRepository.logIn(email: email, password: password);
       final user = await _authRepository.user;
       emit(Authenticated(user));
+    } on CustomException catch (e) {
+      emit(AuthError(e.message));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(e));
     }
   }
 

@@ -1,5 +1,9 @@
 import 'dart:ui';
 
+import 'package:acoustic_event_detector/data/models/user.dart';
+import 'package:acoustic_event_detector/generated/l10n.dart';
+import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
+import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/authenticate/register_form.dart';
@@ -10,11 +14,6 @@ import 'package:acoustic_event_detector/widgets/user/row_buttons_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-
-import '../../data/blocs/cubit/auth_cubit.dart';
-import '../../utils/color_helper.dart';
-import '../../data/models/user.dart';
-import '../../generated/l10n.dart';
 
 class UserScreen extends StatefulWidget {
   @override

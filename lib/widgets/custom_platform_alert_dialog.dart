@@ -75,7 +75,7 @@ class CustomPlatformAlertDialog extends StatelessWidget {
                     FlatButton(
                       child: Text(
                         S.current.yes,
-                        style: Styles.greyRegular18,
+                        style: Styles.defaultGreyRegular18,
                       ),
                       onPressed: () =>
                           Navigator.pop(context, CustomAction.First),

@@ -10,4 +10,7 @@ class ColorHelper {
   static Color grey1 = Color(0xffccbfb8);
   static Color grey2 = Color(0xffb5aca7);
   static Color transparent = Colors.transparent;
+  static Color defaultGrey = Colors.blueGrey;
+  static Color green = Color(0xff028a0f);
+  static Color red = Color(0xffa91b0d);
 }

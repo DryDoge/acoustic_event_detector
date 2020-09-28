@@ -1,11 +1,16 @@
+import 'package:acoustic_event_detector/data/models/custom_exception.dart';
 import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/dimensions.dart';
+import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+
+enum Rights { Basic, All }
 
 class RegisterForm extends StatefulWidget {
   final Function _exitForm;
@@ -24,20 +29,42 @@ class _RegisterFormState extends State<RegisterForm> {
   final AuthRepository _auth = AuthRepository();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordAgainController =
-      TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final FocusNode _focusNodePassword = FocusNode();
-  final FocusNode _focusNodePasswordAgain = FocusNode();
+  final List<FocusNode> _focusNodes = [FocusNode(), FocusNode(), FocusNode()];
+  final List<TextEditingController> _controllers = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+  ];
 
   String email = '';
   String password = '';
   String _passwordAgain = '';
   String error = '';
-  int rights = 0;
+  Rights _rights = Rights.Basic;
 
-  void _showErrorDialog({@required String title, @required String message}) {
+  bool get _selectedBasicRights {
+    return _rights == Rights.Basic;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNodes.forEach((node) {
+      node.addListener(() {
+        setState(() {});
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controllers.forEach((TextEditingController element) {
+      element.dispose();
+    });
+    super.dispose();
+  }
+
+  void _showErrorDialog({@required String title, String message}) {
     showDialog(
       context: context,
       builder: (_) => CustomPlatformAlertDialog(title: title, message: message),
@@ -45,37 +72,31 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Future<void> _validateAndTryRegister() async {
-    if (_formKey.currentState.validate()) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          backgroundColor: ColorHelper.grey,
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                S.current.user_create_new_now,
-                style: Styles.darkBlueRegular16,
-              ),
-              CustomCircularIndicator(),
-            ],
+    try {
+      if (_formKey.currentState.validate()) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            backgroundColor: ColorHelper.grey,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  S.current.user_create_new_now,
+                  style: Styles.darkBlueRegular16,
+                ),
+                CustomCircularIndicator(),
+              ],
+            ),
           ),
-        ),
-      );
-      bool result = await _auth.registerWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-        rights: rights,
-      );
-      if (result == null) {
-        Navigator.pop(context);
-        _showErrorDialog(
-          title: S.current.register_error_default,
-          message: S.current.register_info_default,
         );
-      } else if (result) {
-        Navigator.pop(context);
+        await _auth.registerWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+          rights: _rights.index,
+        );
 
+        Navigator.pop(context);
         showDialog(
           context: context,
           builder: (_) => CustomPlatformAlertDialog(
@@ -84,100 +105,177 @@ class _RegisterFormState extends State<RegisterForm> {
         );
         widget._exitForm();
       } else {
-        Navigator.pop(context);
-        showDialog(
-          context: context,
-          builder: (_) => CustomPlatformAlertDialog(
-            title: S.current.register_error_default,
-          ),
-        );
+        if (password.length < 6) {
+          _showErrorDialog(
+            title: S.current.register_password_error_short,
+            message: S.current.register_password_info_short,
+          );
+        } else if (password != _passwordAgain) {
+          _showErrorDialog(
+            title: S.current.register_password_error_not_match,
+            message: S.current.register_password_info_not_match,
+          );
+        }
+        for (int i = 1; i < _controllers.length; i++) {
+          _controllers[i].clear();
+        }
       }
-    } else {
-      if (password.length < 6) {
-        _showErrorDialog(
-          title: S.current.register_password_error_short,
-          message: S.current.register_password_info_short,
-        );
-      } else if (password != _passwordAgain) {
-        _showErrorDialog(
-          title: S.current.register_password_error_not_match,
-          message: S.current.register_password_info_not_match,
-        );
-      }
-      _passwordController.clear();
-      _passwordAgainController.clear();
+    } on CustomException catch (error) {
+      Navigator.pop(context);
+      _showErrorDialog(
+        title: error.message,
+      );
+    } catch (error) {
+      Navigator.pop(context);
+      _showErrorDialog(
+        title: S.current.register_error_default,
+        message: S.current.register_info_default,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.symmetric(horizontal: Dimensions.size20),
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
-              textInputAction: TextInputAction.next,
-              controller: _emailController,
-              validator: (value) =>
-                  value.isEmpty ? S.current.register_email_info : null,
-              decoration: InputDecoration(labelText: S.current.email),
+            CustomTextField(
+              focusNode: _focusNodes[0],
+              labelText: S.current.email,
+              icon: Icon(
+                Icons.email_outlined,
+                size: Dimensions.size30,
+                color: _focusNodes[0].hasFocus
+                    ? ColorHelper.darkBlue
+                    : ColorHelper.defaultGrey,
+              ),
+              controller: _controllers[0],
+              inputAction: TextInputAction.next,
               onChanged: (value) {
                 setState(() => email = value);
               },
-              onFieldSubmitted: (value) =>
-                  FocusScope.of(context).requestFocus(_focusNodePassword),
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(_focusNodes[1]),
+              validator: (value) =>
+                  value.isEmpty ? S.current.register_email_info : null,
             ),
-            SizedBox(height: Dimensions.size20),
-            TextFormField(
-              textInputAction: TextInputAction.next,
-              focusNode: _focusNodePassword,
-              controller: _passwordController,
+            CustomTextField(
+              controller: _controllers[1],
+              labelText: S.current.password,
+              focusNode: _focusNodes[1],
+              obscureText: true,
+              icon: Icon(
+                Icons.lock_outline_rounded,
+                size: Dimensions.size30,
+                color: _focusNodes[1].hasFocus
+                    ? ColorHelper.darkBlue
+                    : ColorHelper.defaultGrey,
+              ),
+              inputAction: TextInputAction.next,
               validator: (value) => value.length < 6
                   ? S.current.register_password_info_short
                   : null,
-              decoration: InputDecoration(labelText: S.current.password),
-              obscureText: true,
               onChanged: (value) {
                 setState(() => password = value);
               },
-              onFieldSubmitted: (value) =>
-                  FocusScope.of(context).requestFocus(_focusNodePasswordAgain),
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(_focusNodes[2]),
             ),
-            SizedBox(height: Dimensions.size20),
-            TextFormField(
-              focusNode: _focusNodePasswordAgain,
-              controller: _passwordAgainController,
+            CustomTextField(
+              controller: _controllers[2],
+              labelText: S.current.password,
+              focusNode: _focusNodes[2],
+              obscureText: true,
+              inputAction: TextInputAction.next,
+              icon: Icon(
+                Icons.lock_outline_rounded,
+                size: Dimensions.size30,
+                color: _focusNodes[2].hasFocus
+                    ? ColorHelper.darkBlue
+                    : ColorHelper.defaultGrey,
+              ),
               validator: (value) => value != password
                   ? S.current.register_password_error_not_match
                   : null,
-              decoration: InputDecoration(labelText: S.current.password),
-              obscureText: true,
               onChanged: (value) {
                 setState(() => _passwordAgain = value);
               },
-              onFieldSubmitted: (_) => _validateAndTryRegister(),
+              onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
             ),
-            SizedBox(height: Dimensions.size20),
-            RaisedButton(
+            RadioListTile(
+              activeColor: ColorHelper.darkBlue,
+              title: Text(
+                '${S.current.rights_basic} ${S.current.rights.toLowerCase()}',
+                style: _selectedBasicRights
+                    ? Styles.darkBlueRegular16
+                    : Styles.defaultGreyRegular16,
+              ),
+              secondary: Icon(
+                Icons.done_rounded,
+                color: _selectedBasicRights
+                    ? ColorHelper.darkBlue
+                    : ColorHelper.defaultGrey,
+              ),
+              value: Rights.Basic,
+              groupValue: _rights,
+              onChanged: (value) {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  _rights = value;
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: ColorHelper.darkBlue,
+              title: Text(
+                  '${S.current.rights_all} ${S.current.rights.toLowerCase()}',
+                  style: !_selectedBasicRights
+                      ? Styles.darkBlueRegular16
+                      : Styles.defaultGreyRegular16),
+              secondary: Icon(
+                Icons.done_all_rounded,
+                color: !_selectedBasicRights
+                    ? ColorHelper.darkBlue
+                    : ColorHelper.defaultGrey,
+              ),
+              value: Rights.All,
+              groupValue: _rights,
+              onChanged: (value) {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  _rights = value;
+                });
+              },
+            ),
+            RaisedButton.icon(
+              icon: Icon(
+                Icons.add_circle_outline_rounded,
+                color: ColorHelper.darkBlue,
+                size: Dimensions.size30,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Dimensions.size20),
               ),
-              color: ColorHelper.darkBlue,
+              color: ColorHelper.lightBlue,
               onPressed: () => _validateAndTryRegister(),
-              child: Text(
-                S.current.register,
-                style: Styles.lightBlueRegular16,
-              ),
+              label: Text(S.current.register, style: Styles.darkBlueRegular18),
             ),
-            FlatButton(
+            FlatButton.icon(
+              icon: Icon(
+                Icons.cancel_rounded,
+                color: ColorHelper.defaultGrey,
+                size: Dimensions.size18,
+              ),
               onPressed: widget._exitForm,
               splashColor: ColorHelper.transparent,
               highlightColor: ColorHelper.transparent,
-              child: Text(
+              label: Text(
                 S.current.cancel,
-                style: Styles.mediumBlueRegular14,
+                style: Styles.defaultGreyRegular14,
               ),
             ),
           ],
