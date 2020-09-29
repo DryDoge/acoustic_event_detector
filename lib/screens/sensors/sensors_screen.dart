@@ -1,45 +1,54 @@
-import 'package:acoustic_event_detector/data/models/sensor.dart';
-import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
+import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
+import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/utils/dimensions.dart';
+import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SensorsScreen extends StatelessWidget {
-  final SensorsRepository _sensorsRepository = SensorsRepository();
-
   @override
   Widget build(BuildContext context) {
-    return Provider<SensorsRepository>.value(
-      value: _sensorsRepository,
-      builder: (context, child) => StreamBuilder<QuerySnapshot>(
-        stream: _sensorsRepository.sensors,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return CircularProgressIndicator();
-          }
-          if (snapshot.hasData) {
-            final List<Sensor> _sensors = snapshot.data.docs
-                .map((data) => Sensor.fromJson(data.data()))
-                .toList();
-
+    return Container(
+      height: Dimensions.max,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.1, 0.5, 0.9],
+          colors: [
+            ColorHelper.mediumBlue,
+            ColorHelper.lightBlue,
+            ColorHelper.mediumBlue,
+          ],
+        ),
+      ),
+      child: BlocBuilder<SensorsBloc, SensorsState>(
+        builder: (BuildContext context, SensorsState state) {
+          if (state is SensorsLoading) {
+            return Center(child: CustomCircularIndicator());
+          } else if (state is SensorsLoaded) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SensorsList(sensors: _sensors),
-                FlatButton(
-                  onPressed: () async {
-                    await _sensorsRepository.addSensor(
-                      id: '1',
-                      latitude: 10.0,
-                      longitude: 11.11,
-                    );
-                  },
-                  child: Text('Add Sensor'),
-                ),
+                SensorsList(sensors: state.sensors),
               ],
             );
+          } else if (state is SensorsError) {
+            return Center(
+              child: Column(
+                children: [
+                  RaisedButton.icon(
+                    onPressed: () => BlocProvider.of<SensorsBloc>(context)
+                        .add(SensorsRequested()),
+                    icon: Icon(Icons.refresh_outlined),
+                    label: Text('Refresh'),
+                  )
+                ],
+              ),
+            );
           }
+          return Text('SHOULD NOT HAPPEN');
         },
       ),
     );

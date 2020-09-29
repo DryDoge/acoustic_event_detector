@@ -51,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rights" : MessageLookupByLibrary.simpleMessage("Rights"),
     "rights_all" : MessageLookupByLibrary.simpleMessage("All"),
     "rights_basic" : MessageLookupByLibrary.simpleMessage("Basic"),
+    "sensor_already_exists_id" : MessageLookupByLibrary.simpleMessage("A sensor with this id already exists"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Sensors"),
     "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("User with this email is disabled"),
     "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("User with this email does not exist"),

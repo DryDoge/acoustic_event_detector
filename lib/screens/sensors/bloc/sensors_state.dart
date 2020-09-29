@@ -14,7 +14,7 @@ class SensorsLoading extends SensorsState {
 class SensorsLoaded extends SensorsState {
   final List<Sensor> sensors;
 
-  const SensorsLoaded(this.sensors);
+  const SensorsLoaded({@required this.sensors});
 
   @override
   List<Object> get props => [sensors];
@@ -30,29 +30,35 @@ class SensorsLoaded extends SensorsState {
   int get hashCode => sensors.hashCode;
 }
 
-class SensorsAdding extends SensorsState {
+class SensorAddedSuccess extends SensorsState {
+  final Sensor sensor;
   final List<Sensor> sensors;
 
-  const SensorsAdding(this.sensors);
+  const SensorAddedSuccess({
+    @required this.sensor,
+    @required this.sensors,
+  });
 
   @override
-  List<Object> get props => [sensors];
+  List<Object> get props => [sensor, sensors];
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is SensorsAdding && listEquals(o.sensors, sensors);
+    return o is SensorAddedSuccess &&
+        o.sensor == sensor &&
+        listEquals(o.sensors, sensors);
   }
 
   @override
-  int get hashCode => sensors.hashCode;
+  int get hashCode => sensor.hashCode ^ sensors.hashCode;
 }
 
 class SensorsError extends SensorsState {
   final String message;
 
-  const SensorsError(this.message);
+  const SensorsError({@required this.message});
 
   @override
   List<Object> get props => [message];

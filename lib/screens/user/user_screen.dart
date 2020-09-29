@@ -2,54 +2,70 @@ import 'dart:ui';
 
 import 'package:acoustic_event_detector/data/models/user.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
-import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/authenticate/register_form.dart';
 import 'package:acoustic_event_detector/widgets/custom_decorated_grey_container.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/user/info_widget.dart';
-import 'package:acoustic_event_detector/widgets/user/row_buttons_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class UserScreen extends StatefulWidget {
+  const UserScreen({
+    Key key,
+    @required this.addUser,
+    @required this.exitRegistration,
+  }) : super(key: key);
+
   @override
   _UserScreenState createState() => _UserScreenState();
+
+  final bool addUser;
+  final Function exitRegistration;
 }
 
 class _UserScreenState extends State<UserScreen> {
-  bool _addUser = false;
+  final _controller = ScrollController();
+
+  void _scrollDown(BuildContext context) {
+    if (widget.addUser) {
+      _controller.animateTo(
+        _controller.position.maxScrollExtent,
+        duration: Duration(milliseconds: 600),
+        curve: Curves.fastOutSlowIn,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _authCubit = context.bloc<AuthCubit>();
-    final User _user = Provider.of<User>(context, listen: false);
-    final Size _size = MediaQuery.of(context).size;
+    Future.delayed(Duration.zero, () => _scrollDown(context));
     return Container(
       height: Dimensions.max,
       decoration: BoxDecoration(
         gradient: RadialGradient(
-          center: Alignment.topRight,
           colors: [
             ColorHelper.darkBlue,
-            ColorHelper.mediumBlue,
             ColorHelper.lightBlue,
+            ColorHelper.mediumBlue,
+            ColorHelper.darkBlue,
           ],
-          radius: 1.4,
+          radius: 1.3,
+          center: Alignment(0.6, -0.3),
+          focal: Alignment(0.3, 0.1),
         ),
       ),
       child: SingleChildScrollView(
+        controller: _controller,
         child: Padding(
           padding: const EdgeInsets.all(Dimensions.size16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InfoWidget(user: _user),
+              InfoWidget(user: Provider.of<User>(context, listen: false)),
               SizedBox(height: Dimensions.size10),
-              _addUser
+              widget.addUser
                   ? Card(
                       elevation: Dimensions.size6,
                       color: ColorHelper.grey,
@@ -64,35 +80,14 @@ class _UserScreenState extends State<UserScreen> {
                               style: Styles.darkBlueBold20,
                             ),
                             RegisterForm(
-                              exitForm: () => setState(() {
-                                _addUser = false;
-                              }),
+                              exitForm: widget.exitRegistration,
                             ),
                           ],
                         ),
                       ),
                     )
-                  : SizedBox(
-                      height:
-                          _size.height * (_size.height > 600 ? 0.5152 : 0.40),
-                    ),
-              SizedBox(height: Dimensions.size20),
-              RowButtonsWidget(
-                rights: _user.rights,
-                firstButtonOnPressed: () => setState(() => _addUser = true),
-                secondButtonOnPressed: () async {
-                  final result = await showDialog(
-                    context: context,
-                    builder: (context) => CustomPlatformAlertDialog(
-                      title: S.current.log_out_question,
-                      oneOptionOnly: false,
-                    ),
-                  );
-                  if (result == CustomAction.First) {
-                    _authCubit.logOutUser();
-                  }
-                },
-              ),
+                  : SizedBox.shrink(),
+              SizedBox(height: Dimensions.size70),
             ],
           ),
         ),

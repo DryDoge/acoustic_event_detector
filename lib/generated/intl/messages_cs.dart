@@ -51,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rights" : MessageLookupByLibrary.simpleMessage("Práva"),
     "rights_all" : MessageLookupByLibrary.simpleMessage("Všechna"),
     "rights_basic" : MessageLookupByLibrary.simpleMessage("Základní"),
+    "sensor_already_exists_id" : MessageLookupByLibrary.simpleMessage("Senzor s týmhle id již existuje"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Senzory"),
     "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("Uživatel je vypnutej"),
     "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("Uživatel neexistuje"),

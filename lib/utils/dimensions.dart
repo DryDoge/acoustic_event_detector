@@ -15,5 +15,9 @@ class Dimensions {
   static const double size33 = 33.0;
   static const double size40 = 40.0;
   static const double size50 = 50.0;
+  static const double size60 = 60.0;
+  static const double size70 = 70.0;
+  static const double size80 = 80.0;
+
   static const double max = double.infinity;
 }

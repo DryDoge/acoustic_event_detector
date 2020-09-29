@@ -19,36 +19,34 @@ class SensorsListItem extends StatelessWidget {
       key: ValueKey<String>(_sensor?.dbId ?? _sensor?.id ?? ''),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ListTile(
-          leading: Text(_sensor?.id ?? ''),
-          title: Column(
-            children: [
-              Text(_sensor?.latitude?.toString() ?? ''),
-              Text(_sensor?.longitude?.toString() ?? ''),
-            ],
-          ),
-          trailing: Text('ha'),
-          onLongPress: () async {
-            final action = await showDialog(
-              context: context,
-              builder: (context) => CustomPlatformAlertDialog(
-                oneOptionOnly: false,
-                title: 'NAOZAJ ZMAZAT?',
-              ),
-            );
+        child: Card(
+          child: ListTile(
+            leading: Text(_sensor?.id ?? ''),
+            title: Column(
+              children: [
+                Text(_sensor?.latitude?.toString() ?? ''),
+                Text(_sensor?.longitude?.toString() ?? ''),
+              ],
+            ),
+            trailing: Text('ha'),
+            onLongPress: () async {
+              final action = await showDialog(
+                context: context,
+                builder: (context) => CustomPlatformAlertDialog(
+                  oneOptionOnly: false,
+                  title: 'NAOZAJ ZMAZAT?',
+                ),
+              );
 
-            if (action == CustomAction.First) {
-              Provider.of<SensorsRepository>(context, listen: false)
-                  .deleteSensor(sensorDbId: _sensor.dbId);
-            }
-          },
-          onTap: () async =>
-              Provider.of<SensorsRepository>(context, listen: false)
-                  .updateSensor(oldSensor: _sensor, latitude: 15.0),
+              if (action == CustomAction.First) {
+                Provider.of<SensorsRepository>(context, listen: false)
+                    .deleteSensor(sensorDbId: _sensor.dbId);
+              }
+            },
+            onTap: () async =>
+                Provider.of<SensorsRepository>(context, listen: false)
+                    .updateSensor(oldSensor: _sensor, latitude: 15.0),
+          ),
         ),
       ),
     );

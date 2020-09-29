@@ -3,7 +3,6 @@ import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/dimensions.dart';
-import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
@@ -36,10 +35,9 @@ class _RegisterFormState extends State<RegisterForm> {
     TextEditingController(),
   ];
 
-  String email = '';
-  String password = '';
+  String _email = '';
+  String _password = '';
   String _passwordAgain = '';
-  String error = '';
   Rights _rights = Rights.Basic;
 
   bool get _selectedBasicRights {
@@ -91,8 +89,8 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         );
         await _auth.registerWithEmailAndPassword(
-          email: email.trim(),
-          password: password.trim(),
+          email: _email.trim(),
+          password: _password.trim(),
           rights: _rights.index,
         );
 
@@ -105,12 +103,12 @@ class _RegisterFormState extends State<RegisterForm> {
         );
         widget._exitForm();
       } else {
-        if (password.length < 6) {
+        if (_password.length < 6) {
           _showErrorDialog(
             title: S.current.register_password_error_short,
             message: S.current.register_password_info_short,
           );
-        } else if (password != _passwordAgain) {
+        } else if (_password != _passwordAgain) {
           _showErrorDialog(
             title: S.current.register_password_error_not_match,
             message: S.current.register_password_info_not_match,
@@ -156,7 +154,7 @@ class _RegisterFormState extends State<RegisterForm> {
               controller: _controllers[0],
               inputAction: TextInputAction.next,
               onChanged: (value) {
-                setState(() => email = value);
+                setState(() => _email = value);
               },
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_focusNodes[1]),
@@ -180,7 +178,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   ? S.current.register_password_info_short
                   : null,
               onChanged: (value) {
-                setState(() => password = value);
+                setState(() => _password = value);
               },
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_focusNodes[2]),
@@ -198,7 +196,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     ? ColorHelper.darkBlue
                     : ColorHelper.defaultGrey,
               ),
-              validator: (value) => value != password
+              validator: (value) => value != _password
                   ? S.current.register_password_error_not_match
                   : null,
               onChanged: (value) {
@@ -266,7 +264,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             FlatButton.icon(
               icon: Icon(
-                Icons.cancel_rounded,
+                Icons.cancel_outlined,
                 color: ColorHelper.defaultGrey,
                 size: Dimensions.size18,
               ),

@@ -1,10 +1,12 @@
 import 'package:acoustic_event_detector/data/models/user.dart';
 import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
+import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/authenticate/authenticate_screen.dart';
 import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
 import 'package:acoustic_event_detector/screens/home_screen.dart';
 import 'package:acoustic_event_detector/screens/loading_screen.dart';
+import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:flutter/material.dart';
@@ -50,10 +52,16 @@ class App extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            return BlocProvider(
-              create: (context) => AuthCubit(AuthRepository()),
-              child: ScreenWrapper(),
-            );
+            return MultiBlocProvider(providers: [
+              BlocProvider<AuthCubit>(
+                create: (context) =>
+                    AuthCubit(authRepository: AuthRepository()),
+              ),
+              BlocProvider<SensorsBloc>(
+                create: (context) =>
+                    SensorsBloc(sensorsRepository: SensorsRepository()),
+              )
+            ], child: ScreenWrapper());
           }
 
           return LoadingScreen();

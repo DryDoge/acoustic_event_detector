@@ -38,5 +38,6 @@
   "register_email_already_exists_error": "The email is already in use",
   "register_regirstration_disabled_error": "The registration is disabled",
   "register_too_many_requests_error": "Too many requests",
-  "register_user_not_created": "An user was not created"
+  "register_user_not_created": "An user was not created",
+  "sensor_already_exists_id": "A sensor with this id already exists"
 }

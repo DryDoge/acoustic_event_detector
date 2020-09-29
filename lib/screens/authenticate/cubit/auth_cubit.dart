@@ -3,13 +3,14 @@ import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:acoustic_event_detector/data/models/user.dart' as model;
+import 'package:flutter/foundation.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final AuthRepository _authRepository;
+  final AuthRepository authRepository;
 
-  AuthCubit(this._authRepository) : super(const AuthInitial());
+  AuthCubit({@required this.authRepository}) : super(const AuthInitial());
 
   Future<void> authenticateUser(
     String email,
@@ -17,8 +18,8 @@ class AuthCubit extends Cubit<AuthState> {
   ) async {
     try {
       emit(const AuthLoading());
-      await _authRepository.logIn(email: email, password: password);
-      final user = await _authRepository.user;
+      await authRepository.logIn(email: email, password: password);
+      final user = await authRepository.user;
       emit(Authenticated(user));
     } on CustomException catch (e) {
       emit(AuthError(e.message));
@@ -29,7 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logOutUser() async {
     try {
-      await _authRepository.logOut();
+      await authRepository.logOut();
       emit(const Unauthenticated());
     } catch (e) {
       emit(AuthError(e.toString()));
@@ -39,7 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> tryToLoginAutomaticly() async {
     try {
       emit(const AuthLoading());
-      final model.User user = await _authRepository.user;
+      final model.User user = await authRepository.user;
       if (user != null) {
         emit(Authenticated(user));
       } else {

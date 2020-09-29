@@ -24,7 +24,8 @@ class RowButtonsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _rights == 1
             ? CustomDecoratedGreyContainer(
@@ -32,7 +33,7 @@ class RowButtonsWidget extends StatelessWidget {
                   padding: EdgeInsets.all(Dimensions.size0),
                   onPressed: _firstButtonOnPressed,
                   icon: Icon(
-                    Icons.person_add,
+                    Icons.person_add_alt_1_outlined,
                     color: ColorHelper.darkBlue,
                     size: Dimensions.size24,
                   ),
@@ -48,7 +49,7 @@ class RowButtonsWidget extends StatelessWidget {
         FlatButton.icon(
           onPressed: _secondButtonOnPressed,
           icon: Icon(
-            Icons.exit_to_app,
+            Icons.exit_to_app_outlined,
             color: ColorHelper.darkBlue,
             size: Dimensions.size24,
           ),

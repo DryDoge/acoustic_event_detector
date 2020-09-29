@@ -38,5 +38,6 @@
   "register_email_already_exists_error": "Email se již používa",
   "register_regirstration_disabled_error": "Registrace je vypnuta",
   "register_too_many_requests_error": "Príliš mnoho požadavků",
-  "register_user_not_created": "Uživatel nebyl vytvořen"
+  "register_user_not_created": "Uživatel nebyl vytvořen",
+  "sensor_already_exists_id": "Senzor s týmhle id již existuje"
 }

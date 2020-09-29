@@ -29,7 +29,7 @@ class InfoWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: Dimensions.size8),
                   child: Icon(
-                    Icons.person,
+                    Icons.person_outline_outlined,
                     color: ColorHelper.darkBlue,
                     size: Dimensions.size30,
                   ),
@@ -53,7 +53,7 @@ class InfoWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: Dimensions.size8),
                   child: Icon(
-                    Icons.settings_applications,
+                    Icons.settings_applications_outlined,
                     color: ColorHelper.darkBlue,
                     size: Dimensions.size30,
                   ),

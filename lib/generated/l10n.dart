@@ -422,6 +422,16 @@ class S {
       args: [],
     );
   }
+
+  /// `A sensor with this id already exists`
+  String get sensor_already_exists_id {
+    return Intl.message(
+      'A sensor with this id already exists',
+      name: 'sensor_already_exists_id',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
