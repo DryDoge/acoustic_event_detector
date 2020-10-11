@@ -2,6 +2,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final FocusNode _focusNode;
@@ -13,7 +14,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction _inputAction;
   final bool _obscureText;
   final Icon _icon;
-
+  final TextInputType _inputType;
+  final List<TextInputFormatter> _inputFormatters;
   const CustomTextField({
     Key key,
     @required FocusNode focusNode,
@@ -23,6 +25,8 @@ class CustomTextField extends StatelessWidget {
     void Function(String) onFieldSubmitted,
     @required String labelText,
     TextInputAction inputAction,
+    TextInputType inputType,
+    List<TextInputFormatter> inputFormatters,
     Icon icon,
     bool obscureText,
   })  : this._focusNode = focusNode,
@@ -34,6 +38,8 @@ class CustomTextField extends StatelessWidget {
         this._inputAction = inputAction ?? TextInputAction.done,
         this._obscureText = obscureText ?? false,
         this._icon = icon ?? null,
+        this._inputType = inputType ?? TextInputType.text,
+        this._inputFormatters = inputFormatters ?? null,
         super(key: key);
 
   @override
@@ -43,11 +49,22 @@ class CustomTextField extends StatelessWidget {
       controller: _controller,
       validator: _validator,
       textInputAction: _inputAction,
+      keyboardType: _inputType,
+      inputFormatters: _inputFormatters,
       decoration: InputDecoration(
         icon: _icon,
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: ColorHelper.darkBlue),
         ),
+        suffix: _focusNode.hasFocus
+            ? GestureDetector(
+                child: Text(
+                  S.current.clear,
+                  style: Styles.defaultGreyRegular14,
+                ),
+                onTap: () => _controller.clear(),
+              )
+            : null,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: ColorHelper.defaultGrey),
         ),

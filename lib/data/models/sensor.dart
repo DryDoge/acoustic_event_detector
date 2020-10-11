@@ -7,7 +7,7 @@ class Sensor {
   @JsonKey(name: 'dbId')
   final String dbId;
   @JsonKey(name: 'id')
-  final String id;
+  final int id;
   @JsonKey(name: 'lat')
   final double latitude;
   @JsonKey(name: 'lon')

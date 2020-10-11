@@ -1,5 +1,4 @@
 import 'package:acoustic_event_detector/utils/color_helper.dart';
-import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class Styles {
@@ -49,12 +48,12 @@ class Styles {
   static TextStyle lightBlueBold20 = TextStyle(
     color: ColorHelper.lightBlue,
     fontWeight: FontWeight.bold,
-    fontSize: Dimensions.size20,
+    fontSize: 20.0,
   );
 
   static TextStyle lightBlueRegular14 = TextStyle(
     color: ColorHelper.lightBlue,
-    fontSize: Dimensions.size14,
+    fontSize: 20.0,
   );
 
   static TextStyle lightBlueRegular16 = TextStyle(
@@ -76,6 +75,16 @@ class Styles {
   static TextStyle whiteRegular20 = TextStyle(
     color: ColorHelper.white,
     fontSize: 20,
+  );
+
+  static TextStyle whiteRegular18 = TextStyle(
+    color: ColorHelper.white,
+    fontSize: 18,
+  );
+
+  static TextStyle whiteRegular16 = TextStyle(
+    color: ColorHelper.white,
+    fontSize: 16,
   );
 
   static TextStyle whiteRegular14 = TextStyle(
@@ -131,15 +140,15 @@ class Styles {
 
   static TextStyle defaultGreyRegular18 = TextStyle(
     color: ColorHelper.defaultGrey,
-    fontSize: Dimensions.size18,
+    fontSize: 18.0,
   );
 
   static TextStyle defaultGreyRegular16 = TextStyle(
     color: ColorHelper.defaultGrey,
-    fontSize: Dimensions.size16,
+    fontSize: 16.0,
   );
   static TextStyle defaultGreyRegular14 = TextStyle(
     color: ColorHelper.defaultGrey,
-    fontSize: Dimensions.size14,
+    fontSize: 14.0,
   );
 }

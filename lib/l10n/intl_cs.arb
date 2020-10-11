@@ -8,7 +8,7 @@
   "history": "Historie",
   "account": "Účet",
   "sensors": "Senzory",
-  "current_event": "Aktuální událost",
+  "current_event": "Událost",
   "log_out": "Odhlásit se",
   "log_in": "Přihlásit se",
   "password": "Heslo",
@@ -17,7 +17,7 @@
   "rights": "Práva",
   "rights_basic": "Základní",
   "rights_all": "Všechna",
-  "new_user": "Přidej uživatele",
+  "new_user": "Přidat uživatele",
   "cancel": "Zrušit",
   "user_create_new": "Vytvořit nového uživatele",
   "user_create_new_now": "Vytvářim nového uživatele...",
@@ -39,5 +39,13 @@
   "register_regirstration_disabled_error": "Registrace je vypnuta",
   "register_too_many_requests_error": "Príliš mnoho požadavků",
   "register_user_not_created": "Uživatel nebyl vytvořen",
-  "sensor_already_exists_id": "Senzor s týmhle id již existuje"
+  "sensor_already_exists_id": "Senzor s týmhle id již existuje",
+  "add_sensor": "Přidat novej senzor",
+  "update_sensor": "Upravit senzor",
+  "id": "ID",
+  "latitude": "Zeměpisná šířka",
+  "longitude": "Zeměpisná délka",
+  "save": "Uložit",
+  "clear": "Smazat",
+  "create": "Přidat"
 }

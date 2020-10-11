@@ -9,7 +9,7 @@ part of 'sensor.dart';
 Sensor _$SensorFromJson(Map<String, dynamic> json) {
   return Sensor(
     dbId: json['dbId'] as String,
-    id: json['id'] as String,
+    id: json['id'] as int,
     latitude: (json['lat'] as num)?.toDouble(),
     longitude: (json['lon'] as num)?.toDouble(),
   );

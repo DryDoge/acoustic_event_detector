@@ -33,11 +33,6 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      routes: {
-        HomeScreen.routeName: (context) => HomeScreen(),
-        AuthenticateScreen.routeName: (context) => AuthenticateScreen(),
-        LoadingScreen.routeName: (context) => LoadingScreen(),
-      },
       home: FutureBuilder<FirebaseApp>(
         future: _initialization,
         builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
@@ -52,16 +47,19 @@ class App extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            return MultiBlocProvider(providers: [
-              BlocProvider<AuthCubit>(
-                create: (context) =>
-                    AuthCubit(authRepository: AuthRepository()),
-              ),
-              BlocProvider<SensorsBloc>(
-                create: (context) =>
-                    SensorsBloc(sensorsRepository: SensorsRepository()),
-              )
-            ], child: ScreenWrapper());
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<AuthCubit>(
+                  create: (context) =>
+                      AuthCubit(authRepository: AuthRepository()),
+                ),
+                BlocProvider<SensorsBloc>(
+                  create: (context) =>
+                      SensorsBloc(sensorsRepository: SensorsRepository()),
+                )
+              ],
+              child: ScreenWrapper(),
+            );
           }
 
           return LoadingScreen();
@@ -93,7 +91,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
           return AuthenticateScreen();
         } else if (state is Authenticated) {
           return Provider(
-            create: (context) => state.props.first as User,
+            create: (context) => state.user,
             child: HomeScreen(),
           );
         }
@@ -105,7 +103,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: S.current.register_error_default,
-              message: state.message,
+              message: Text(state.message),
             ),
           );
         }

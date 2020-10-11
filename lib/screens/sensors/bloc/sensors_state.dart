@@ -30,31 +30,6 @@ class SensorsLoaded extends SensorsState {
   int get hashCode => sensors.hashCode;
 }
 
-class SensorAddedSuccess extends SensorsState {
-  final Sensor sensor;
-  final List<Sensor> sensors;
-
-  const SensorAddedSuccess({
-    @required this.sensor,
-    @required this.sensors,
-  });
-
-  @override
-  List<Object> get props => [sensor, sensors];
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is SensorAddedSuccess &&
-        o.sensor == sensor &&
-        listEquals(o.sensors, sensors);
-  }
-
-  @override
-  int get hashCode => sensor.hashCode ^ sensors.hashCode;
-}
-
 class SensorsError extends SensorsState {
   final String message;
 
@@ -72,4 +47,74 @@ class SensorsError extends SensorsState {
 
   @override
   int get hashCode => message.hashCode;
+}
+
+class AddSensorInitial extends SensorsState {
+  const AddSensorInitial();
+}
+
+class SensorAdded extends SensorsState {
+  final Sensor addedSensor;
+
+  const SensorAdded({
+    this.addedSensor,
+  });
+
+  @override
+  List<Object> get props => [addedSensor];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is SensorAdded && o.addedSensor == addedSensor;
+  }
+
+  @override
+  int get hashCode => addedSensor.hashCode;
+}
+
+class UpdateSensorInitial extends SensorsState {
+  final Sensor sensorToBeUpdated;
+  UpdateSensorInitial({
+    this.sensorToBeUpdated,
+  });
+
+  @override
+  List<Object> get props => [sensorToBeUpdated];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is UpdateSensorInitial && o.sensorToBeUpdated == sensorToBeUpdated;
+  }
+
+  @override
+  int get hashCode => sensorToBeUpdated.hashCode;
+}
+
+class SensorUpdated extends SensorsState {
+  final Sensor updatedSensor;
+
+  const SensorUpdated({
+    this.updatedSensor,
+  });
+
+  @override
+  List<Object> get props => [updatedSensor];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is SensorAdded && o.addedSensor == updatedSensor;
+  }
+
+  @override
+  int get hashCode => updatedSensor.hashCode;
+}
+
+class SensorDeleted extends SensorsState {
+  const SensorDeleted();
 }

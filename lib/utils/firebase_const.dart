@@ -8,6 +8,7 @@ class FirebaseConst {
   static const String tokenField = 'idToken';
   static const String uidField = 'localId';
   static const String errorField = 'error';
+  static const String idField = 'id';
 
   static const String errorWrongEmail = "invalid-email";
   static const String errorWrongPass = "wrong-password";

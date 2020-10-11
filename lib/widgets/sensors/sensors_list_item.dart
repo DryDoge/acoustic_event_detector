@@ -1,8 +1,8 @@
 import 'package:acoustic_event_detector/data/models/sensor.dart';
-import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
+import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SensorsListItem extends StatelessWidget {
   final Sensor _sensor;
@@ -21,7 +21,7 @@ class SensorsListItem extends StatelessWidget {
       child: Container(
         child: Card(
           child: ListTile(
-            leading: Text(_sensor?.id ?? ''),
+            leading: Text(_sensor?.id.toString() ?? ''),
             title: Column(
               children: [
                 Text(_sensor?.latitude?.toString() ?? ''),
@@ -39,13 +39,16 @@ class SensorsListItem extends StatelessWidget {
               );
 
               if (action == CustomAction.First) {
-                Provider.of<SensorsRepository>(context, listen: false)
-                    .deleteSensor(sensorDbId: _sensor.dbId);
+                BlocProvider.of<SensorsBloc>(context).add(
+                  DeleteSensor(sensorToBeDeleted: _sensor),
+                );
               }
             },
-            onTap: () async =>
-                Provider.of<SensorsRepository>(context, listen: false)
-                    .updateSensor(oldSensor: _sensor, latitude: 15.0),
+            onTap: () {
+              BlocProvider.of<SensorsBloc>(context).add(
+                UpdateSensorRequested(sensorToBeUpdated: _sensor),
+              );
+            },
           ),
         ),
       ),

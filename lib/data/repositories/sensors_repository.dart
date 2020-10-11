@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:acoustic_event_detector/data/models/custom_exception.dart';
 import 'package:acoustic_event_detector/data/models/sensor.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
@@ -8,59 +10,47 @@ import 'package:flutter/foundation.dart';
 class SensorsRepository {
   final FirebaseFirestore _firestore;
 
-  List<Sensor> _sensors;
-
-  List<Sensor> get sensors {
-    return [..._sensors];
-  }
-
-  void _setSensors(List<Sensor> sensors) {
-    _sensors = sensors;
-  }
-
-  bool _canBeAdded({@required String id}) {
-    return sensors.map((Sensor sensor) => sensor.id).toList().contains(id);
-  }
-
   SensorsRepository({
     FirebaseFirestore firestore,
   }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
-  Future<Sensor> findSensorById({@required String id}) async {
-    return Future.value(sensors.firstWhere(
-      (Sensor sensor) => sensor.id == id,
-      orElse: null,
-    ));
+  Stream<QuerySnapshot> get sensors {
+    return _firestore
+        .collection(FirebaseConst.sensorsCollection)
+        .orderBy(FirebaseConst.idField)
+        .snapshots();
   }
 
-  Future<List<Sensor>> getAllSensors() async {
-    final QuerySnapshot _snapshot =
-        await _firestore.collection(FirebaseConst.sensorsCollection).get();
+  Future<Sensor> findSensorById({
+    @required int id,
+  }) async {
+    final QuerySnapshot querySnapshot = await _firestore
+        .collection(FirebaseConst.sensorsCollection)
+        .where(FirebaseConst.idField, isEqualTo: id)
+        .get();
 
-    final List<Sensor> _sensors =
-        _snapshot.docs.map((data) => Sensor.fromJson(data.data())).toList();
-
-    _setSensors(_sensors);
-    return Future.value(sensors);
+    return querySnapshot.sensors.first;
   }
 
   Future<bool> deleteSensor({
     @required String sensorDbId,
   }) async {
-    return await _firestore
+    final deleted = await _firestore
         .collection(FirebaseConst.sensorsCollection)
         .doc(sensorDbId)
         .delete()
-        .catchError((_) => Future.value(false))
-        .then((_) => Future.value(true));
+        .catchError((_) => false)
+        .then((_) => true);
+
+    return deleted;
   }
 
   Future<bool> addSensor({
-    @required String id,
+    @required int id,
     @required double latitude,
     @required double longitude,
   }) async {
-    if (_canBeAdded(id: id)) {
+    if (await _canBeAdded(id: id)) {
       final DocumentReference newDoc =
           _firestore.collection(FirebaseConst.sensorsCollection).doc();
       final Sensor newSensor = Sensor(
@@ -70,17 +60,18 @@ class SensorsRepository {
         longitude: longitude,
       );
 
-      return await newDoc
+      final bool added = await newDoc
           .set(newSensor.toJson())
-          .catchError((_) => Future.value(false))
-          .then((_) => Future.value(true));
+          .catchError((_) => false)
+          .then((_) => true);
+      return added;
     }
     throw CustomException(S.current.sensor_already_exists_id);
   }
 
   Future<bool> updateSensor({
     @required Sensor oldSensor,
-    @required String id,
+    @required int id,
     @required double latitude,
     @required double longitude,
   }) async {
@@ -88,11 +79,13 @@ class SensorsRepository {
         .collection(FirebaseConst.sensorsCollection)
         .doc(oldSensor.dbId);
 
-    if (oldSensor.id != id && !_canBeAdded(id: id)) {
+    if (oldSensor.id != id && !await _canBeAdded(id: id)) {
       throw CustomException(S.current.sensor_already_exists_id);
     }
 
-    if (oldSensor.latitude != latitude || oldSensor.longitude != longitude) {
+    if (oldSensor.id != id ||
+        oldSensor.latitude != latitude ||
+        oldSensor.longitude != longitude) {
       final Sensor updatedSensor = Sensor(
         dbId: oldSensor.dbId,
         id: id,
@@ -100,13 +93,35 @@ class SensorsRepository {
         longitude: longitude,
       );
 
-      _firestore
+      final updated = await _firestore
           .runTransaction((transaction) => transaction
               .get(docRef)
               .then((_) => transaction.update(docRef, updatedSensor.toJson())))
-          .catchError((_) => Future.value(false))
-          .then((_) => Future.value(true));
+          .catchError((_) => false)
+          .then((_) => true);
+
+      return updated;
     }
-    return Future.value(true);
+    return true;
+  }
+
+  List<Sensor> processData(QuerySnapshot snapshot) =>
+      snapshot.docs.map((data) => Sensor.fromJson(data.data())).toList();
+
+  Future<bool> _canBeAdded({
+    @required int id,
+  }) async {
+    final QuerySnapshot querySnapshot = await _firestore
+        .collection(FirebaseConst.sensorsCollection)
+        .where(FirebaseConst.idField, isEqualTo: id)
+        .get();
+
+    return querySnapshot.sensors.first == null;
+  }
+}
+
+extension getSensors on QuerySnapshot {
+  List<Sensor> get sensors {
+    return SensorsRepository().processData(this);
   }
 }

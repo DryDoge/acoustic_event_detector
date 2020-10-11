@@ -1,15 +1,14 @@
 import 'package:acoustic_event_detector/data/models/user.dart';
-import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
-import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
 import 'package:acoustic_event_detector/screens/event/event_screen.dart';
 import 'package:acoustic_event_detector/screens/history/history_screen.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/sensors_screen.dart';
 import 'package:acoustic_event_detector/screens/user/user_screen.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
-import 'package:acoustic_event_detector/widgets/user/row_buttons_widget.dart';
+import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
+import 'package:acoustic_event_detector/widgets/logout_appbar_action.dart';
+import 'package:acoustic_event_detector/widgets/user/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -35,49 +34,15 @@ class _HomeScreenState extends State<HomeScreen> {
         return HistoryScreen();
       case 3:
         return UserScreen(
-            addUser: _addUser, exitRegistration: _triggerRegistration);
+            addUser: _addUser, exitRegistration: _cancelRegistration);
       default:
         return UserScreen(
-            addUser: _addUser, exitRegistration: _triggerRegistration);
+            addUser: _addUser, exitRegistration: _cancelRegistration);
     }
   }
 
-  Widget get _floatingButton {
-    switch (_selectedIndex) {
-      case 0:
-        return SizedBox.shrink();
-      case 1:
-        return IconButton(icon: Icon(Icons.add), onPressed: () {});
-      case 2:
-        return SizedBox.shrink();
-      case 3:
-        return RowButtonsWidget(
-          rights: Provider.of<User>(context, listen: false).rights,
-          firstButtonOnPressed: () {
-            setState(() {
-              _addUser = true;
-            });
-          },
-          secondButtonOnPressed: () async {
-            final result = await showDialog(
-              context: context,
-              builder: (context) => CustomPlatformAlertDialog(
-                title: S.current.log_out_question,
-                oneOptionOnly: false,
-              ),
-            );
-            if (result == CustomAction.First) {
-              BlocProvider.of<AuthCubit>(context).logOutUser();
-            }
-          },
-        );
-      default:
-        return SizedBox.shrink();
-    }
-  }
-
-  String get _title {
-    switch (_selectedIndex) {
+  String getTitle(index) {
+    switch (index) {
       case 0:
         return S.current.current_event;
       case 1:
@@ -88,6 +53,60 @@ class _HomeScreenState extends State<HomeScreen> {
         return S.current.account;
       default:
         return '';
+    }
+  }
+
+  Widget get _floatingButton {
+    switch (_selectedIndex) {
+      case 0:
+        return SizedBox.shrink();
+      case 1:
+        return Provider.of<User>(context, listen: false).rights == 1
+            ? CustomFloatingButton(
+                onPressed: () {
+                  BlocProvider.of<SensorsBloc>(context)
+                      .add(AddSensorRequested());
+                },
+                icon: Icon(
+                  Icons.leak_add_rounded,
+                  color: ColorHelper.white,
+                ),
+                label: S.current.add_sensor,
+              )
+            : SizedBox.shrink();
+      case 2:
+        return SizedBox.shrink();
+      case 3:
+        return _addUser
+            ? SizedBox.shrink()
+            : CustomFloatingButton(
+                icon: Icon(
+                  Icons.group_add,
+                  color: ColorHelper.white,
+                  size: 24.0,
+                ),
+                label: S.current.new_user,
+                onPressed: () => setState(() {
+                  _addUser = true;
+                }),
+              );
+      default:
+        return SizedBox.shrink();
+    }
+  }
+
+  List<Widget> get _actions {
+    switch (_selectedIndex) {
+      case 0:
+        return [];
+      case 1:
+        return [];
+      case 2:
+        return [];
+      case 3:
+        return [LogoutAppBarAction()];
+      default:
+        return [];
     }
   }
 
@@ -103,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _triggerRegistration() {
+  void _cancelRegistration() {
     setState(() {
       _addUser = false;
     });
@@ -111,41 +130,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _screenOptions,
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: ColorHelper.darkBlue,
-          unselectedItemColor: ColorHelper.defaultGrey,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.place),
-              label: _title,
-              backgroundColor: ColorHelper.lightBlue,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_input_antenna),
-              label: _title,
-              backgroundColor: ColorHelper.lightBlue,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: _title,
-              backgroundColor: ColorHelper.lightBlue,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: _title,
-              backgroundColor: ColorHelper.lightBlue,
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.shifting,
+    return Container(
+      color: ColorHelper.darkBlue,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(actions: _actions),
+          body: _screenOptions,
+          bottomNavigationBar: BottomNavigationBar(
+            elevation: 4.0,
+            selectedItemColor: ColorHelper.darkBlue,
+            unselectedItemColor: ColorHelper.defaultGrey,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.place),
+                label: getTitle(0),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings_input_antenna),
+                label: getTitle(1),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.history),
+                label: getTitle(2),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                label: getTitle(3),
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            type: BottomNavigationBarType.fixed,
+          ),
+          floatingActionButton: _floatingButton,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
-        floatingActionButton: _floatingButton,
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterFloat,
       ),
     );
   }

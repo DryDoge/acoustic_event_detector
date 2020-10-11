@@ -1,7 +1,6 @@
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
-import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +25,6 @@ class _SignInFormState extends State<SignInForm> {
   AuthCubit _authCubit;
 
   @override
-  void dispose() {
-    _controllers.forEach((TextEditingController element) {
-      element.dispose();
-    });
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _authCubit = context.bloc<AuthCubit>();
@@ -45,19 +36,27 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   @override
+  void dispose() {
+    _controllers.forEach((TextEditingController element) {
+      element.dispose();
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: Dimensions.size40,
-        vertical: Dimensions.size20,
+        horizontal: 40.0,
+        vertical: 20.0,
       ),
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Dimensions.size20),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.size20),
+            borderRadius: BorderRadius.circular(20.0),
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
@@ -68,12 +67,12 @@ class _SignInFormState extends State<SignInForm> {
               ],
             ),
           ),
-          padding: const EdgeInsets.all(Dimensions.size10),
+          padding: const EdgeInsets.all(10.0),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: Dimensions.size20),
+                SizedBox(height: 20.0),
                 CustomTextField(
                   focusNode: _focusNodes[0],
                   labelText: S.current.email,
@@ -81,7 +80,7 @@ class _SignInFormState extends State<SignInForm> {
                   inputAction: TextInputAction.next,
                   icon: Icon(
                     Icons.email_outlined,
-                    size: Dimensions.size30,
+                    size: 30.0,
                     color: _focusNodes[0].hasFocus
                         ? ColorHelper.darkBlue
                         : ColorHelper.defaultGrey,
@@ -101,7 +100,7 @@ class _SignInFormState extends State<SignInForm> {
                   controller: _controllers[1],
                   icon: Icon(
                     Icons.lock_outline_rounded,
-                    size: Dimensions.size30,
+                    size: 30.0,
                     color: _focusNodes[1].hasFocus
                         ? ColorHelper.darkBlue
                         : ColorHelper.defaultGrey,
@@ -118,7 +117,7 @@ class _SignInFormState extends State<SignInForm> {
                     }
                   },
                 ),
-                SizedBox(height: Dimensions.size20),
+                SizedBox(height: 20.0),
                 RaisedButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {

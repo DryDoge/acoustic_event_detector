@@ -1,5 +1,4 @@
 import 'package:acoustic_event_detector/utils/color_helper.dart';
-import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class CustomCircularIndicator extends StatelessWidget {
@@ -8,10 +7,10 @@ class CustomCircularIndicator extends StatelessWidget {
     return Theme(
       data: ThemeData(accentColor: ColorHelper.darkBlue),
       child: Padding(
-        padding: const EdgeInsets.all(Dimensions.size10),
+        padding: const EdgeInsets.all(10.0),
         child: Container(
-          height: Dimensions.size30,
-          width: Dimensions.size30,
+          height: 30.0,
+          width: 30.0,
           child: CircularProgressIndicator(
             backgroundColor: ColorHelper.lightBlue,
           ),

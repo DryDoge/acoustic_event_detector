@@ -2,7 +2,6 @@ import 'package:acoustic_event_detector/data/models/custom_exception.dart';
 import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
-import 'package:acoustic_event_detector/utils/dimensions.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
@@ -65,7 +64,10 @@ class _RegisterFormState extends State<RegisterForm> {
   void _showErrorDialog({@required String title, String message}) {
     showDialog(
       context: context,
-      builder: (_) => CustomPlatformAlertDialog(title: title, message: message),
+      builder: (_) => CustomPlatformAlertDialog(
+        title: title,
+        message: Text(message),
+      ),
     );
   }
 
@@ -135,7 +137,7 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Dimensions.size20),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -146,7 +148,7 @@ class _RegisterFormState extends State<RegisterForm> {
               labelText: S.current.email,
               icon: Icon(
                 Icons.email_outlined,
-                size: Dimensions.size30,
+                size: 30.0,
                 color: _focusNodes[0].hasFocus
                     ? ColorHelper.darkBlue
                     : ColorHelper.defaultGrey,
@@ -168,7 +170,7 @@ class _RegisterFormState extends State<RegisterForm> {
               obscureText: true,
               icon: Icon(
                 Icons.lock_outline_rounded,
-                size: Dimensions.size30,
+                size: 30.0,
                 color: _focusNodes[1].hasFocus
                     ? ColorHelper.darkBlue
                     : ColorHelper.defaultGrey,
@@ -191,7 +193,7 @@ class _RegisterFormState extends State<RegisterForm> {
               inputAction: TextInputAction.next,
               icon: Icon(
                 Icons.lock_outline_rounded,
-                size: Dimensions.size30,
+                size: 30.0,
                 color: _focusNodes[2].hasFocus
                     ? ColorHelper.darkBlue
                     : ColorHelper.defaultGrey,
@@ -252,21 +254,21 @@ class _RegisterFormState extends State<RegisterForm> {
             RaisedButton.icon(
               icon: Icon(
                 Icons.add_circle_outline_rounded,
-                color: ColorHelper.darkBlue,
-                size: Dimensions.size30,
+                color: ColorHelper.white,
+                size: 30.0,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Dimensions.size20),
+                borderRadius: BorderRadius.circular(20.0),
               ),
-              color: ColorHelper.lightBlue,
+              color: ColorHelper.darkBlue,
               onPressed: () => _validateAndTryRegister(),
-              label: Text(S.current.register, style: Styles.darkBlueRegular18),
+              label: Text(S.current.register, style: Styles.whiteRegular18),
             ),
             FlatButton.icon(
               icon: Icon(
                 Icons.cancel_outlined,
                 color: ColorHelper.defaultGrey,
-                size: Dimensions.size18,
+                size: 18.0,
               ),
               onPressed: widget._exitForm,
               splashColor: ColorHelper.transparent,

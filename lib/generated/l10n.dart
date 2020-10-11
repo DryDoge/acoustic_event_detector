@@ -113,10 +113,10 @@ class S {
     );
   }
 
-  /// `Current event`
+  /// `Event`
   String get current_event {
     return Intl.message(
-      'Current event',
+      'Event',
       name: 'current_event',
       desc: '',
       args: [],
@@ -203,10 +203,10 @@ class S {
     );
   }
 
-  /// `Add user`
+  /// `Add an user`
   String get new_user {
     return Intl.message(
-      'Add user',
+      'Add an user',
       name: 'new_user',
       desc: '',
       args: [],
@@ -428,6 +428,86 @@ class S {
     return Intl.message(
       'A sensor with this id already exists',
       name: 'sensor_already_exists_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a new sensor`
+  String get add_sensor {
+    return Intl.message(
+      'Add a new sensor',
+      name: 'add_sensor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update the sensor`
+  String get update_sensor {
+    return Intl.message(
+      'Update the sensor',
+      name: 'update_sensor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ID`
+  String get id {
+    return Intl.message(
+      'ID',
+      name: 'id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latitude`
+  String get latitude {
+    return Intl.message(
+      'Latitude',
+      name: 'latitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Longitude`
+  String get longitude {
+    return Intl.message(
+      'Longitude',
+      name: 'longitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear`
+  String get clear {
+    return Intl.message(
+      'Clear',
+      name: 'clear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create`
+  String get create {
+    return Intl.message(
+      'Create',
+      name: 'create',
       desc: '',
       args: [],
     );

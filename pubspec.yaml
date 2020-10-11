@@ -14,17 +14,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^0.1.3
-  geocoder: ^0.2.1
-  flutter_map: any
-  bloc: ^6.0.1
-  flutter_bloc: ^6.0.1
-  equatable: ^1.2.3
-  meta: ^1.1.8
-  firebase_core: "0.5.0"
-  firebase_auth: "^0.18.0+1"
-  cloud_firestore: ^0.14.0+2
-  json_annotation: ^3.0.0
+  cupertino_icons: ^1.0.0
+  geocoding: ^1.0.4+1
+  flutter_map: ^0.10.1+1
+  flutter_bloc: ^6.0.6
+  equatable: ^1.2.5
+  meta: ^1.2.3
+  firebase_core: ^0.5.0+1
+  firebase_auth: ^0.18.1+2
+  cloud_firestore: ^0.14.1+3
+  json_annotation: ^3.1.0
   provider: ^4.3.2+2
   flutter_localizations:
     sdk: flutter
@@ -32,8 +31,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  json_serializable: ^3.2.0
-  build_runner: ^1.0.0
+  json_serializable: ^3.5.0
+  build_runner: ^1.10.3
 
 flutter:
 
