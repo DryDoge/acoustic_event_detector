@@ -12,12 +12,15 @@ class Sensor {
   final double latitude;
   @JsonKey(name: 'lon')
   final double longitude;
+  @JsonKey(name: 'address')
+  final String address;
 
   Sensor({
     this.dbId,
     this.id,
     this.latitude,
     this.longitude,
+    this.address,
   });
 
   factory Sensor.fromJson(Map<String, dynamic> json) => _$SensorFromJson(json);

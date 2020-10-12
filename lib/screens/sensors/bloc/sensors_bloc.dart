@@ -56,13 +56,12 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
           id: event.id,
           latitude: event.latitude,
           longitude: event.longitude,
+          address: event.address,
         );
-
         if (added) {
           final Sensor addedSensor = await sensorsRepository.findSensorById(
             id: event.id,
           );
-          print(addedSensor.id);
           yield SensorAdded(addedSensor: addedSensor);
           await _subscription?.cancel();
           _subscription = sensorsRepository.sensors.listen(
@@ -92,6 +91,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
           id: event.id,
           latitude: event.latitude,
           longitude: event.longitude,
+          address: event.address,
         );
 
         if (updated) {

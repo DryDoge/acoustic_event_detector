@@ -49,8 +49,10 @@ class SensorsRepository {
     @required int id,
     @required double latitude,
     @required double longitude,
+    @required String address,
   }) async {
-    if (await _canBeAdded(id: id)) {
+    final bool _canAdd = await _canBeAdded(id: id);
+    if (_canAdd) {
       final DocumentReference newDoc =
           _firestore.collection(FirebaseConst.sensorsCollection).doc();
       final Sensor newSensor = Sensor(
@@ -58,6 +60,7 @@ class SensorsRepository {
         id: id,
         latitude: latitude,
         longitude: longitude,
+        address: address,
       );
 
       final bool added = await newDoc
@@ -74,12 +77,13 @@ class SensorsRepository {
     @required int id,
     @required double latitude,
     @required double longitude,
+    @required String address,
   }) async {
     final DocumentReference docRef = _firestore
         .collection(FirebaseConst.sensorsCollection)
         .doc(oldSensor.dbId);
-
-    if (oldSensor.id != id && !await _canBeAdded(id: id)) {
+    final bool _canAdd = await _canBeAdded(id: id);
+    if (oldSensor.id != id && !_canAdd) {
       throw CustomException(S.current.sensor_already_exists_id);
     }
 
@@ -91,6 +95,7 @@ class SensorsRepository {
         id: id,
         latitude: latitude,
         longitude: longitude,
+        address: address,
       );
 
       final updated = await _firestore
@@ -115,8 +120,11 @@ class SensorsRepository {
         .collection(FirebaseConst.sensorsCollection)
         .where(FirebaseConst.idField, isEqualTo: id)
         .get();
-
-    return querySnapshot.sensors.first == null;
+    final isEmpty = querySnapshot.sensors.isEmpty;
+    if (isEmpty) {
+      return true;
+    }
+    return false;
   }
 }
 

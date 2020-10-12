@@ -1,7 +1,9 @@
 import 'package:acoustic_event_detector/data/models/sensor.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
+import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:acoustic_event_detector/widgets/sensors/add_sensor_map.dart';
+import 'package:acoustic_event_detector/widgets/user/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,16 +12,19 @@ import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddEditScreen extends StatefulWidget {
   static const routeName = '/add-edit';
 
+  final bool canDelete;
   final bool isEdit;
   final Sensor sensor;
 
   AddEditScreen({
     Key key,
     @required this.isEdit,
+    @required this.canDelete,
     this.sensor,
   }) : super(key: key);
 
@@ -42,6 +47,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
   double _latitude;
   double _longitude;
   int _id;
+  Placemark _placemark;
 
   @override
   void initState() {
@@ -76,11 +82,25 @@ class _AddEditScreenState extends State<AddEditScreen> {
     setState(() {});
   }
 
+  Future<Placemark> _getPlacemark() async {
+    if (_latitude != null && _longitude != null) {
+      final List<Placemark> placemarks =
+          await placemarkFromCoordinates(_latitude, _longitude);
+
+      return placemarks.first;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.isEdit ? S.current.update_sensor : S.current.add_sensor,
+        title: widget.isEdit
+            ? widget.canDelete
+                ? '${S.current.update_sensor} ID: ${widget.sensor.id}'
+                : '${S.current.sensor} ID: ${widget.sensor.id}'
+            : S.current.add_sensor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -92,6 +112,36 @@ class _AddEditScreenState extends State<AddEditScreen> {
           },
         ),
       ),
+      floatingActionButton: widget.isEdit && widget.canDelete
+          ? CustomFloatingButton(
+              onPressed: () async {
+                final action = await showDialog(
+                  context: context,
+                  builder: (context) => CustomPlatformAlertDialog(
+                    oneOptionOnly: false,
+                    onlySecondImportant: true,
+                    title: S.current.delete_sensor,
+                    message: Text(
+                      S.current.sensor_delete_question,
+                      style: Styles.defaultGreyRegular14,
+                    ),
+                  ),
+                );
+
+                if (action == CustomAction.First) {
+                  BlocProvider.of<SensorsBloc>(context).add(
+                    DeleteSensor(sensorToBeDeleted: widget.sensor),
+                  );
+                }
+              },
+              icon: Icon(
+                Icons.delete_forever_outlined,
+                color: ColorHelper.white,
+              ),
+              label: S.current.delete_sensor,
+            )
+          : SizedBox.shrink(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -180,47 +230,71 @@ class _AddEditScreenState extends State<AddEditScreen> {
                   endIndent: 10,
                   height: 20,
                 ),
-                Padding(
+                Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: AddSensorMap(
-                    latitude: _latitude,
-                    longitude: _longitude,
-                    refreshMap: _refreshMap,
-                  ),
-                ),
-                RaisedButton.icon(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  color: ColorHelper.darkBlue,
-                  icon: Icon(
-                    Icons.add_circle_outline,
-                    color: ColorHelper.white,
-                    size: 24.0,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _sensorsBloc.add(
-                        widget.isEdit
-                            ? UpdateSensor(
-                                id: _id,
-                                latitude: _latitude,
-                                longitude: _longitude,
-                                oldSensor: widget.sensor,
-                              )
-                            : AddSensor(
-                                id: _id,
-                                latitude: _latitude,
-                                longitude: _longitude,
-                              ),
+                  height: 220.0,
+                  width: double.infinity,
+                  child: FutureBuilder<Placemark>(
+                    future: _getPlacemark(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error'),
+                        );
+                      }
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return Center(child: CustomCircularIndicator());
+                      }
+                      _placemark = snapshot.data;
+                      return AddSensorMap(
+                        latitude: _latitude,
+                        longitude: _longitude,
+                        refreshMap: _refreshMap,
+                        placemark: _placemark == null
+                            ? null
+                            : '${_placemark?.street} ${_placemark?.subLocality}',
                       );
-                    }
-                  },
-                  label: Text(
-                    widget.isEdit ? S.current.save : S.current.create,
-                    style: Styles.whiteRegular18,
+                    },
                   ),
                 ),
+                if (widget.canDelete)
+                  RaisedButton.icon(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    color: ColorHelper.darkBlue,
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: ColorHelper.white,
+                      size: 24.0,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        _sensorsBloc.add(
+                          widget.isEdit
+                              ? UpdateSensor(
+                                  id: _id,
+                                  latitude: _latitude,
+                                  longitude: _longitude,
+                                  oldSensor: widget.sensor,
+                                  address:
+                                      '${_placemark.street} ${_placemark.subLocality}',
+                                )
+                              : AddSensor(
+                                  id: _id,
+                                  latitude: _latitude,
+                                  longitude: _longitude,
+                                  address:
+                                      '${_placemark.street} ${_placemark.subLocality}',
+                                ),
+                        );
+                      }
+                    },
+                    label: Text(
+                      widget.isEdit ? S.current.save : S.current.create,
+                      style: Styles.whiteRegular18,
+                    ),
+                  ),
                 FlatButton.icon(
                   icon: Icon(
                     Icons.cancel_outlined,
@@ -232,7 +306,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     _sensorsBloc.add(SensorsRequested());
                   },
                   label: Text(
-                    S.current.cancel,
+                    widget.canDelete ? S.current.cancel : S.current.back,
                     style: Styles.defaultGreyRegular14,
                   ),
                 ),

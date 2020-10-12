@@ -12,6 +12,7 @@ Sensor _$SensorFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     latitude: (json['lat'] as num)?.toDouble(),
     longitude: (json['lon'] as num)?.toDouble(),
+    address: json['address'] as String,
   );
 }
 
@@ -20,4 +21,5 @@ Map<String, dynamic> _$SensorToJson(Sensor instance) => <String, dynamic>{
       'id': instance.id,
       'lat': instance.latitude,
       'lon': instance.longitude,
+      'address': instance.address,
     };

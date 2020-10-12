@@ -1,3 +1,4 @@
+import 'package:acoustic_event_detector/data/models/user.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/sensors/add_edit_screen.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
@@ -6,8 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
+import 'package:provider/provider.dart';
 
 class SensorsScreen extends StatefulWidget {
+  final int _userRights;
+
+  const SensorsScreen({
+    Key key,
+    @required int userRights,
+  })  : this._userRights = userRights,
+        super(key: key);
   @override
   _SensorsScreenState createState() => _SensorsScreenState();
 }
@@ -76,10 +85,12 @@ class _SensorsScreenState extends State<SensorsScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider.value(
-                  value: _sensorsBloc,
-                  child: AddEditScreen(
-                    isEdit: false,
-                  )),
+                value: _sensorsBloc,
+                child: AddEditScreen(
+                  isEdit: false,
+                  canDelete: widget._userRights == 1,
+                ),
+              ),
             ),
           );
         }
@@ -91,6 +102,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
                 value: _sensorsBloc,
                 child: AddEditScreen(
                   isEdit: true,
+                  canDelete: widget._userRights == 1,
                   sensor: state.sensorToBeUpdated,
                 ),
               ),

@@ -29,7 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return EventScreen();
       case 1:
-        return SensorsScreen();
+        return SensorsScreen(
+          userRights: Provider.of<User>(context, listen: false).rights,
+        );
       case 2:
         return HistoryScreen();
       case 3:

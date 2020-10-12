@@ -83,6 +83,16 @@ class S {
     );
   }
 
+  /// `Back`
+  String get back {
+    return Intl.message(
+      'Back',
+      name: 'back',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `History`
   String get history {
     return Intl.message(
@@ -108,6 +118,16 @@ class S {
     return Intl.message(
       'Sensors',
       name: 'sensors',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sensor`
+  String get sensor {
+    return Intl.message(
+      'Sensor',
+      name: 'sensor',
       desc: '',
       args: [],
     );
@@ -453,6 +473,16 @@ class S {
     );
   }
 
+  /// `Delete the sensor`
+  String get delete_sensor {
+    return Intl.message(
+      'Delete the sensor',
+      name: 'delete_sensor',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `ID`
   String get id {
     return Intl.message(
@@ -508,6 +538,26 @@ class S {
     return Intl.message(
       'Create',
       name: 'create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure?`
+  String get sensor_delete_question {
+    return Intl.message(
+      'Are you sure?',
+      name: 'sensor_delete_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please fill location`
+  String get sensor_map_location {
+    return Intl.message(
+      'Please fill location',
+      name: 'sensor_map_location',
       desc: '',
       args: [],
     );

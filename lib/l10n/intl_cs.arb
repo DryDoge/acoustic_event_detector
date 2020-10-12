@@ -5,9 +5,11 @@
   "ok": "Ok",
   "yes": "Ano",
   "no": "Ne",
+  "back": "Zpět",
   "history": "Historie",
   "account": "Účet",
   "sensors": "Senzory",
+  "sensor": "Senzor",
   "current_event": "Událost",
   "log_out": "Odhlásit se",
   "log_in": "Přihlásit se",
@@ -42,10 +44,13 @@
   "sensor_already_exists_id": "Senzor s týmhle id již existuje",
   "add_sensor": "Přidat novej senzor",
   "update_sensor": "Upravit senzor",
+  "delete_sensor": "Zmazat senzor",
   "id": "ID",
   "latitude": "Zeměpisná šířka",
   "longitude": "Zeměpisná délka",
   "save": "Uložit",
   "clear": "Smazat",
-  "create": "Přidat"
+  "create": "Přidat",
+  "sensor_delete_question": "Naozaj chcete smazat senzor?",
+  "sensor_map_location": "Pro zobrazení mapy, vyplňte polohu"
 }

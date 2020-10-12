@@ -5,9 +5,11 @@
   "ok": "Ok",
   "yes": "Yes",
   "no": "No",
+  "back": "Back",
   "history": "History",
   "account": "Account",
   "sensors": "Sensors",
+  "sensor": "Sensor",
   "current_event": "Event",
   "log_out": "Log out",
   "log_in": "Log in",
@@ -42,10 +44,13 @@
   "sensor_already_exists_id": "A sensor with this id already exists",
   "add_sensor": "Add a new sensor",
   "update_sensor": "Update the sensor",
+  "delete_sensor": "Delete the sensor",
   "id": "ID",
   "latitude": "Latitude",
   "longitude": "Longitude",
   "save": "Save",
   "clear": "Clear",
-  "create": "Create"
+  "create": "Create",
+  "sensor_delete_question": "Are you sure?",
+  "sensor_map_location": "Please fill location"
 }

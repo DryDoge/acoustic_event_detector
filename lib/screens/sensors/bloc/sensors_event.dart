@@ -78,10 +78,12 @@ class AddSensor extends SensorsEvent {
   final int id;
   final double latitude;
   final double longitude;
+  final String address;
   AddSensor({
-    this.id,
-    this.latitude,
-    this.longitude,
+    @required this.id,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.address,
   });
 
   @override
@@ -89,6 +91,7 @@ class AddSensor extends SensorsEvent {
         id,
         latitude,
         longitude,
+        address,
       ];
 
   @override
@@ -98,32 +101,35 @@ class AddSensor extends SensorsEvent {
     return o is AddSensor &&
         o.id == id &&
         o.latitude == latitude &&
-        o.longitude == longitude;
+        o.longitude == longitude &&
+        o.address == address;
   }
 
   @override
-  int get hashCode => id.hashCode ^ latitude.hashCode ^ longitude.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        latitude.hashCode ^
+        longitude.hashCode ^
+        address.hashCode;
+  }
 }
 
 class UpdateSensor extends SensorsEvent {
   final int id;
   final double latitude;
   final double longitude;
+  final String address;
   final Sensor oldSensor;
   UpdateSensor({
-    this.id,
-    this.latitude,
-    this.longitude,
-    this.oldSensor,
+    @required this.id,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.oldSensor,
+    @required this.address,
   });
 
   @override
-  List<Object> get props => [
-        id,
-        latitude,
-        longitude,
-        oldSensor,
-      ];
+  List<Object> get props => [id, latitude, longitude, oldSensor, address];
 
   @override
   bool operator ==(Object o) {
@@ -133,6 +139,7 @@ class UpdateSensor extends SensorsEvent {
         o.id == id &&
         o.latitude == latitude &&
         o.longitude == longitude &&
+        o.address == address &&
         o.oldSensor == oldSensor;
   }
 
@@ -141,6 +148,7 @@ class UpdateSensor extends SensorsEvent {
     return id.hashCode ^
         latitude.hashCode ^
         longitude.hashCode ^
+        address.hashCode ^
         oldSensor.hashCode;
   }
 }
