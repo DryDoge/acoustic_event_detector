@@ -1,14 +1,15 @@
 import 'package:acoustic_event_detector/data/models/user.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/event/event_screen.dart';
+import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/history/history_screen.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/sensors_screen.dart';
 import 'package:acoustic_event_detector/screens/user/user_screen.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
-import 'package:acoustic_event_detector/widgets/logout_appbar_action.dart';
-import 'package:acoustic_event_detector/widgets/user/custom_floating_button.dart';
+import 'package:acoustic_event_detector/widgets/user/logout_appbar_action.dart';
+import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 3;
-  bool _addUser = false;
+  bool _addUserMenuEnabled = false;
+  bool _isMap = false;
+  User _user;
+  SensorsBloc _sensorsBloc;
+  HistoricalEventsBloc _historicalEventsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = Provider.of<User>(context, listen: false);
+    _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
+    _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
+  }
 
   Widget get _screenOptions {
     switch (_selectedIndex) {
@@ -30,20 +43,25 @@ class _HomeScreenState extends State<HomeScreen> {
         return EventScreen();
       case 1:
         return SensorsScreen(
-          userRights: Provider.of<User>(context, listen: false).rights,
+          userRights: _user.rights,
+          setMap: () => _isMap = !_isMap,
         );
       case 2:
         return HistoryScreen();
       case 3:
         return UserScreen(
-            addUser: _addUser, exitRegistration: _cancelRegistration);
+          addUser: _addUserMenuEnabled,
+          exitRegistration: _cancelRegistration,
+        );
       default:
         return UserScreen(
-            addUser: _addUser, exitRegistration: _cancelRegistration);
+          addUser: _addUserMenuEnabled,
+          exitRegistration: _cancelRegistration,
+        );
     }
   }
 
-  String getTitle(index) {
+  String _getTitle(index) {
     switch (index) {
       case 0:
         return S.current.current_event;
@@ -63,11 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return SizedBox.shrink();
       case 1:
-        return Provider.of<User>(context, listen: false).rights == 1
+        return _user.rights == 1
             ? CustomFloatingButton(
                 onPressed: () {
-                  BlocProvider.of<SensorsBloc>(context)
-                      .add(AddSensorRequested());
+                  _sensorsBloc.add(AddSensorRequested());
                 },
                 icon: Icon(
                   Icons.leak_add_rounded,
@@ -79,9 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return SizedBox.shrink();
       case 3:
-        return _addUser
-            ? SizedBox.shrink()
-            : CustomFloatingButton(
+        return !_addUserMenuEnabled && _user.rights == 1
+            ? CustomFloatingButton(
                 icon: Icon(
                   Icons.group_add,
                   color: ColorHelper.white,
@@ -89,35 +105,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 label: S.current.new_user,
                 onPressed: () => setState(() {
-                  _addUser = true;
+                  _addUserMenuEnabled = true;
                 }),
-              );
+              )
+            : SizedBox.shrink();
       default:
         return SizedBox.shrink();
     }
   }
 
-  List<Widget> get _actions {
+  PreferredSizeWidget get _appBar {
     switch (_selectedIndex) {
-      case 0:
-        return [];
-      case 1:
-        return [];
-      case 2:
-        return [];
       case 3:
-        return [LogoutAppBarAction()];
+        return CustomAppBar(actions: [LogoutAppBarAction()]);
       default:
-        return [];
+        return null;
     }
   }
 
   void _onItemTapped(int index) {
     if (index == 1) {
-      BlocProvider.of<SensorsBloc>(context).add(SensorsRequested());
+      _isMap
+          ? _sensorsBloc.add(SensorsMapRequested())
+          : _sensorsBloc.add(SensorsRequested());
     }
+
+    if (index == 2) {
+      _historicalEventsBloc.add(HistoricalEventsRequested());
+    }
+
     if (index == 3) {
-      _addUser = false;
+      _addUserMenuEnabled = false;
     }
     setState(() {
       _selectedIndex = index;
@@ -126,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _cancelRegistration() {
     setState(() {
-      _addUser = false;
+      _addUserMenuEnabled = false;
     });
   }
 
@@ -136,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
       color: ColorHelper.darkBlue,
       child: SafeArea(
         child: Scaffold(
-          appBar: CustomAppBar(actions: _actions),
+          appBar: _appBar,
           body: _screenOptions,
           bottomNavigationBar: BottomNavigationBar(
             elevation: 4.0,
@@ -145,19 +163,19 @@ class _HomeScreenState extends State<HomeScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.place),
-                label: getTitle(0),
+                label: _getTitle(0),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings_input_antenna),
-                label: getTitle(1),
+                label: _getTitle(1),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
-                label: getTitle(2),
+                label: _getTitle(2),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle),
-                label: getTitle(3),
+                label: _getTitle(3),
               ),
             ],
             currentIndex: _selectedIndex,

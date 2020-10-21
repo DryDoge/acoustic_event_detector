@@ -11,67 +11,36 @@ class SensorsRequested extends SensorsEvent {
   const SensorsRequested();
 }
 
-class DeleteSensor extends SensorsEvent {
-  final Sensor sensorToBeDeleted;
-
-  const DeleteSensor({this.sensorToBeDeleted});
-
-  @override
-  List<Object> get props => [sensorToBeDeleted];
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is DeleteSensor && o.sensorToBeDeleted == sensorToBeDeleted;
-  }
-
-  @override
-  int get hashCode => sensorToBeDeleted.hashCode;
-}
-
 class AddSensorRequested extends SensorsEvent {
   const AddSensorRequested();
 }
 
 class UpdateSensorRequested extends SensorsEvent {
   final Sensor sensorToBeUpdated;
+  final bool isMap;
   const UpdateSensorRequested({
     this.sensorToBeUpdated,
+    this.isMap,
   });
 
   @override
-  List<Object> get props => [sensorToBeUpdated];
+  List<Object> get props => [sensorToBeUpdated, isMap];
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
     return o is UpdateSensorRequested &&
-        o.sensorToBeUpdated == sensorToBeUpdated;
+        o.sensorToBeUpdated == sensorToBeUpdated &&
+        o.isMap == isMap;
   }
 
   @override
-  int get hashCode => sensorToBeUpdated.hashCode;
+  int get hashCode => sensorToBeUpdated.hashCode ^ isMap.hashCode;
 }
 
-class _SensorsLoaded extends SensorsEvent {
-  final List<Sensor> sensors;
-
-  _SensorsLoaded(this.sensors);
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is _SensorsLoaded && listEquals(o.sensors, sensors);
-  }
-
-  @override
-  List<Object> get props => [sensors];
-
-  @override
-  int get hashCode => sensors.hashCode;
+class SensorsMapRequested extends SensorsEvent {
+  const SensorsMapRequested();
 }
 
 class AddSensor extends SensorsEvent {
@@ -151,4 +120,61 @@ class UpdateSensor extends SensorsEvent {
         address.hashCode ^
         oldSensor.hashCode;
   }
+}
+
+class DeleteSensor extends SensorsEvent {
+  final Sensor sensorToBeDeleted;
+
+  const DeleteSensor({this.sensorToBeDeleted});
+
+  @override
+  List<Object> get props => [sensorToBeDeleted];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is DeleteSensor && o.sensorToBeDeleted == sensorToBeDeleted;
+  }
+
+  @override
+  int get hashCode => sensorToBeDeleted.hashCode;
+}
+
+class _SensorsLoaded extends SensorsEvent {
+  final List<Sensor> sensors;
+
+  _SensorsLoaded(this.sensors);
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is _SensorsLoaded && listEquals(o.sensors, sensors);
+  }
+
+  @override
+  List<Object> get props => [sensors];
+
+  @override
+  int get hashCode => sensors.hashCode;
+}
+
+class _SensorsMapLoaded extends SensorsEvent {
+  final List<Sensor> sensors;
+
+  _SensorsMapLoaded(this.sensors);
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is _SensorsMapLoaded && listEquals(o.sensors, sensors);
+  }
+
+  @override
+  List<Object> get props => [sensors];
+
+  @override
+  int get hashCode => sensors.hashCode;
 }

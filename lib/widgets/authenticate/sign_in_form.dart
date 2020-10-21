@@ -57,15 +57,6 @@ class _SignInFormState extends State<SignInForm> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                ColorHelper.grey,
-                ColorHelper.grey1,
-                ColorHelper.grey2,
-              ],
-            ),
           ),
           padding: const EdgeInsets.all(10.0),
           child: Form(

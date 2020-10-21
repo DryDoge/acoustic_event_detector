@@ -1,21 +1,28 @@
-import 'package:acoustic_event_detector/data/models/user.dart';
+import 'package:acoustic_event_detector/data/models/sensor.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/sensors/add_edit_screen.dart';
+import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_map/plugin_api.dart';
+import 'package:latlong/latlong.dart';
 
 class SensorsScreen extends StatefulWidget {
   final int _userRights;
+  final Function _setMap;
 
   const SensorsScreen({
     Key key,
     @required int userRights,
+    @required Function setMap,
   })  : this._userRights = userRights,
+        this._setMap = setMap,
         super(key: key);
   @override
   _SensorsScreenState createState() => _SensorsScreenState();
@@ -42,13 +49,110 @@ class _SensorsScreenState extends State<SensorsScreen> {
 
         if (state is SensorsLoaded) {
           if (state.sensors.isNotEmpty) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
                 children: [
-                  SensorsList(sensors: state.sensors),
+                  SingleChildScrollView(
+                    child: SensorsList(sensors: state.sensors),
+                  ),
+                  Positioned(
+                    left: 16,
+                    bottom: 16,
+                    child: CustomFloatingButton(
+                      onPressed: () {
+                        widget._setMap();
+                        _sensorsBloc.add(SensorsMapRequested());
+                      },
+                      icon: Icon(
+                        Icons.map_outlined,
+                        color: ColorHelper.white,
+                      ),
+                      label: S.current.show_on_map,
+                    ),
+                  ),
                 ],
               ),
+            );
+          }
+          return Center(
+            child: Text('Ziadny sensor'),
+          );
+        }
+
+        if (state is SensorsMapLoaded) {
+          if (state.sensors.isNotEmpty) {
+            List<Marker> markers = state.sensors
+                .map(
+                  (Sensor sensor) => Marker(
+                    width: 25.0,
+                    height: 25.0,
+                    point: LatLng(sensor.latitude, sensor.longitude),
+                    builder: (ctx) => Container(
+                      decoration: BoxDecoration(
+                        color: ColorHelper.white,
+                        borderRadius: BorderRadius.circular(30.0),
+                        border: Border.all(color: ColorHelper.darkBlue),
+                      ),
+                      child: GestureDetector(
+                        onTap: () => _sensorsBloc.add(
+                          UpdateSensorRequested(
+                            sensorToBeUpdated: sensor,
+                            isMap: true,
+                          ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            sensor.id.toString(),
+                            textAlign: TextAlign.center,
+                            style: Styles.darkBlueRegular12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList();
+
+            return Stack(
+              children: [
+                FlutterMap(
+                  options: MapOptions(
+                    center: LatLng(
+                      markers.first.point.latitude,
+                      markers.first.point.longitude,
+                    ),
+                    zoom: 17.0,
+                    maxZoom: 18.0,
+                    minZoom: 11.0,
+                  ),
+                  layers: [
+                    TileLayerOptions(
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: ['a', 'b', 'c'],
+                      tileProvider: CachedNetworkTileProvider(),
+                    ),
+                    MarkerLayerOptions(markers: markers)
+                  ],
+                ),
+                Positioned(
+                  left: 16,
+                  bottom: 16,
+                  child: CustomFloatingButton(
+                    onPressed: () {
+                      widget._setMap();
+                      _sensorsBloc.add(SensorsRequested());
+                    },
+                    icon: Icon(
+                      Icons.list_outlined,
+                      color: ColorHelper.white,
+                    ),
+                    label: S.current.show_list,
+                  ),
+                ),
+              ],
             );
           }
           return Center(
@@ -104,6 +208,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
                   isEdit: true,
                   canDelete: widget._userRights == 1,
                   sensor: state.sensorToBeUpdated,
+                  isMap: state.isMap,
                 ),
               ),
             ),
@@ -116,7 +221,8 @@ class _SensorsScreenState extends State<SensorsScreen> {
             builder: (context) => CustomPlatformAlertDialog(
               title: 'Success',
               message: Text(
-                  'Sensor id: ${state.addedSensor.id}\nlatitude: ${state.addedSensor.latitude}\nlongitude: ${state.addedSensor.longitude}'),
+                'Sensor id: ${state.addedSensor.id}\nlatitude: ${state.addedSensor.latitude}\nlongitude: ${state.addedSensor.longitude}',
+              ),
             ),
           );
         }
@@ -127,7 +233,8 @@ class _SensorsScreenState extends State<SensorsScreen> {
             builder: (context) => CustomPlatformAlertDialog(
               title: 'Success',
               message: Text(
-                  'Sensor id: ${state.updatedSensor.id}\nlatitude: ${state.updatedSensor.latitude}\nlongitude: ${state.updatedSensor.longitude}'),
+                'Sensor id: ${state.updatedSensor.id}\nlatitude: ${state.updatedSensor.latitude}\nlongitude: ${state.updatedSensor.longitude}',
+              ),
             ),
           );
         }

@@ -28,7 +28,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
         await _subscription?.cancel();
         _subscription = sensorsRepository.sensors.listen(
           (QuerySnapshot _snapshot) => add(
-            _SensorsLoaded(_snapshot.sensors),
+            _SensorsLoaded(_snapshot.sensorsFromSnapshot),
           ),
         );
       } catch (error) {
@@ -38,6 +38,24 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
 
     if (event is _SensorsLoaded) {
       yield SensorsLoaded(sensors: event.sensors);
+    }
+
+    if (event is SensorsMapRequested) {
+      yield SensorsLoading();
+      try {
+        await _subscription?.cancel();
+        _subscription = sensorsRepository.sensors.listen(
+          (QuerySnapshot _snapshot) => add(
+            _SensorsMapLoaded(_snapshot.sensorsFromSnapshot),
+          ),
+        );
+      } catch (error) {
+        yield SensorsError(message: error.toString());
+      }
+    }
+
+    if (event is _SensorsMapLoaded) {
+      yield SensorsMapLoaded(sensors: event.sensors);
     }
 
     if (event is AddSensorRequested) {
@@ -66,7 +84,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
           await _subscription?.cancel();
           _subscription = sensorsRepository.sensors.listen(
             (QuerySnapshot _snapshot) => add(
-              _SensorsLoaded(_snapshot.sensors),
+              _SensorsLoaded(_snapshot.sensorsFromSnapshot),
             ),
           );
         }
@@ -77,7 +95,10 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
     if (event is UpdateSensorRequested) {
       yield SensorsLoading();
       try {
-        yield UpdateSensorInitial(sensorToBeUpdated: event.sensorToBeUpdated);
+        yield UpdateSensorInitial(
+          sensorToBeUpdated: event.sensorToBeUpdated,
+          isMap: event.isMap,
+        );
       } catch (error) {
         yield SensorsError(message: error.toString());
       }
@@ -103,7 +124,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
           await _subscription?.cancel();
           _subscription = sensorsRepository.sensors.listen(
             (QuerySnapshot _snapshot) => add(
-              _SensorsLoaded(_snapshot.sensors),
+              _SensorsLoaded(_snapshot.sensorsFromSnapshot),
             ),
           );
         }
@@ -124,7 +145,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
           await _subscription?.cancel();
           _subscription = sensorsRepository.sensors.listen(
             (QuerySnapshot _snapshot) => add(
-              _SensorsLoaded(_snapshot.sensors),
+              _SensorsLoaded(_snapshot.sensorsFromSnapshot),
             ),
           );
         }

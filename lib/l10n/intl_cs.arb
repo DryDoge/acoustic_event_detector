@@ -52,5 +52,7 @@
   "clear": "Smazat",
   "create": "Přidat",
   "sensor_delete_question": "Naozaj chcete smazat senzor?",
-  "sensor_map_location": "Pro zobrazení mapy, vyplňte polohu"
+  "sensor_map_location": "Pro zobrazení mapy, vyplňte polohu",
+  "show_on_map": "Zobrazit mapu",
+  "show_list": "Zobrazit zoznam"
 }

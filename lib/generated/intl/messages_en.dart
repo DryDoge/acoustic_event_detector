@@ -65,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "sensor_delete_question" : MessageLookupByLibrary.simpleMessage("Are you sure?"),
     "sensor_map_location" : MessageLookupByLibrary.simpleMessage("Please fill location"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Sensors"),
+    "show_list" : MessageLookupByLibrary.simpleMessage("Show list"),
+    "show_on_map" : MessageLookupByLibrary.simpleMessage("Show map"),
     "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("User with this email is disabled"),
     "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("User with this email does not exist"),
     "sign_in_wrong_email" : MessageLookupByLibrary.simpleMessage("Email address is invalid"),

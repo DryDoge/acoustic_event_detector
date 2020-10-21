@@ -3,7 +3,6 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,27 +17,32 @@ class SensorsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      key: ValueKey<String>(_sensor?.dbId ?? _sensor?.id ?? ''),
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: ListTile(
-            leading: CircleAvatar(
-              radius: 30.0,
-              backgroundColor: ColorHelper.darkBlue,
-              child: Icon(
-                Icons.settings_input_antenna_outlined,
-                color: ColorHelper.white,
-              ),
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  'ID: ${_sensor.id}',
+                  style: Styles.darkBlueBold16,
+                ),
+                Icon(
+                  Icons.settings_input_antenna_outlined,
+                  color: ColorHelper.darkBlue,
+                  size: 24.0,
+                ),
+              ],
             ),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ID: ${_sensor.id}',
-                  style: Styles.darkBlueBold16,
+                  _sensor?.address ?? '',
+                  style: Styles.darkBlueRegular16,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,10 +70,6 @@ class SensorsListItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(
-                  _sensor?.address ?? '',
-                  style: Styles.darkBlueRegular16,
-                ),
               ],
             ),
             trailing: IconButton(
@@ -80,7 +80,10 @@ class SensorsListItem extends StatelessWidget {
               ),
               onPressed: () {
                 BlocProvider.of<SensorsBloc>(context).add(
-                  UpdateSensorRequested(sensorToBeUpdated: _sensor),
+                  UpdateSensorRequested(
+                    sensorToBeUpdated: _sensor,
+                    isMap: false,
+                  ),
                 );
               },
             ),

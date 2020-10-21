@@ -3,7 +3,7 @@ import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:acoustic_event_detector/widgets/sensors/add_sensor_map.dart';
-import 'package:acoustic_event_detector/widgets/user/custom_floating_button.dart';
+import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +19,14 @@ class AddEditScreen extends StatefulWidget {
 
   final bool canDelete;
   final bool isEdit;
+  final bool isMap;
   final Sensor sensor;
 
   AddEditScreen({
     Key key,
     @required this.isEdit,
     @required this.canDelete,
+    this.isMap = false,
     this.sensor,
   }) : super(key: key);
 
@@ -108,7 +110,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
           ),
           onPressed: () {
             Navigator.pop(context);
-            _sensorsBloc.add(SensorsRequested());
+            widget.isMap
+                ? _sensorsBloc.add(SensorsMapRequested())
+                : _sensorsBloc.add(SensorsRequested());
           },
         ),
       ),
@@ -302,8 +306,11 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     size: 18.0,
                   ),
                   onPressed: () {
+                    print(widget.isMap);
                     Navigator.pop(context);
-                    _sensorsBloc.add(SensorsRequested());
+                    widget.isMap
+                        ? _sensorsBloc.add(SensorsMapRequested())
+                        : _sensorsBloc.add(SensorsRequested());
                   },
                   label: Text(
                     widget.canDelete ? S.current.cancel : S.current.back,

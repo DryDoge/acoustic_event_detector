@@ -29,7 +29,7 @@ class SensorsRepository {
         .where(FirebaseConst.idField, isEqualTo: id)
         .get();
 
-    return querySnapshot.sensors.first;
+    return querySnapshot.sensorsFromSnapshot.first;
   }
 
   Future<bool> deleteSensor({
@@ -110,7 +110,7 @@ class SensorsRepository {
     return true;
   }
 
-  List<Sensor> processData(QuerySnapshot snapshot) =>
+  List<Sensor> _processData(QuerySnapshot snapshot) =>
       snapshot.docs.map((data) => Sensor.fromJson(data.data())).toList();
 
   Future<bool> _canBeAdded({
@@ -120,7 +120,7 @@ class SensorsRepository {
         .collection(FirebaseConst.sensorsCollection)
         .where(FirebaseConst.idField, isEqualTo: id)
         .get();
-    final isEmpty = querySnapshot.sensors.isEmpty;
+    final isEmpty = querySnapshot.sensorsFromSnapshot.isEmpty;
     if (isEmpty) {
       return true;
     }
@@ -129,7 +129,7 @@ class SensorsRepository {
 }
 
 extension getSensors on QuerySnapshot {
-  List<Sensor> get sensors {
-    return SensorsRepository().processData(this);
+  List<Sensor> get sensorsFromSnapshot {
+    return SensorsRepository()._processData(this);
   }
 }

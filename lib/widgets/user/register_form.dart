@@ -77,7 +77,6 @@ class _RegisterFormState extends State<RegisterForm> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            backgroundColor: ColorHelper.grey,
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

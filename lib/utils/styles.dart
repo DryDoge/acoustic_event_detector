@@ -147,21 +147,6 @@ class Styles {
     fontSize: 18.0,
   );
 
-  static TextStyle greyRegular14 = TextStyle(
-    color: ColorHelper.grey,
-    fontSize: 14.0,
-  );
-
-  static TextStyle greyRegular12 = TextStyle(
-    color: ColorHelper.grey,
-    fontSize: 12.0,
-  );
-
-  static TextStyle greyRegular18 = TextStyle(
-    color: ColorHelper.grey,
-    fontSize: 18.0,
-  );
-
   static TextStyle defaultGreyRegular18 = TextStyle(
     color: ColorHelper.defaultGrey,
     fontSize: 18.0,

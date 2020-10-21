@@ -1,6 +1,7 @@
 class FirebaseConst {
   static const String userCollection = 'users';
   static const String sensorsCollection = 'sensors';
+  static const String historyCollection = 'history';
 
   static const String rightsField = 'rights';
   static const String emailField = 'email';
@@ -9,6 +10,8 @@ class FirebaseConst {
   static const String uidField = 'localId';
   static const String errorField = 'error';
   static const String idField = 'id';
+  static const String locationField = 'location';
+  static const String timeField = 'happened';
 
   static const String errorWrongEmail = "invalid-email";
   static const String errorWrongPass = "wrong-password";
@@ -31,9 +34,9 @@ class FirebaseConst {
     return _prepareUrl(optionSignUp);
   }
 
-  static const String API_KEY = 'AIzaSyDoGd89bdD-Egmet_l2tEOaNzaxvk08UY0';
+  static const String _API_KEY = 'AIzaSyDoGd89bdD-Egmet_l2tEOaNzaxvk08UY0';
 
   static String _prepareUrl(String option) {
-    return 'https://identitytoolkit.googleapis.com/v1/accounts:$option?key=$API_KEY';
+    return 'https://identitytoolkit.googleapis.com/v1/accounts:$option?key=$_API_KEY';
   }
 }

@@ -76,22 +76,26 @@ class SensorAdded extends SensorsState {
 
 class UpdateSensorInitial extends SensorsState {
   final Sensor sensorToBeUpdated;
+  final bool isMap;
   UpdateSensorInitial({
     this.sensorToBeUpdated,
+    this.isMap,
   });
 
   @override
-  List<Object> get props => [sensorToBeUpdated];
+  List<Object> get props => [sensorToBeUpdated, isMap];
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is UpdateSensorInitial && o.sensorToBeUpdated == sensorToBeUpdated;
+    return o is UpdateSensorInitial &&
+        o.sensorToBeUpdated == sensorToBeUpdated &&
+        o.isMap == isMap;
   }
 
   @override
-  int get hashCode => sensorToBeUpdated.hashCode;
+  int get hashCode => sensorToBeUpdated.hashCode ^ isMap.hashCode;
 }
 
 class SensorUpdated extends SensorsState {
@@ -117,4 +121,20 @@ class SensorUpdated extends SensorsState {
 
 class SensorDeleted extends SensorsState {
   const SensorDeleted();
+}
+
+class SensorsMapLoaded extends SensorsState {
+  final List<Sensor> sensors;
+
+  const SensorsMapLoaded({this.sensors});
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is SensorsMapLoaded && listEquals(o.sensors, sensors);
+  }
+
+  @override
+  int get hashCode => sensors.hashCode;
 }

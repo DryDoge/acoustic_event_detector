@@ -65,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "sensor_delete_question" : MessageLookupByLibrary.simpleMessage("Naozaj chcete smazat senzor?"),
     "sensor_map_location" : MessageLookupByLibrary.simpleMessage("Pro zobrazení mapy, vyplňte polohu"),
     "sensors" : MessageLookupByLibrary.simpleMessage("Senzory"),
+    "show_list" : MessageLookupByLibrary.simpleMessage("Zobrazit zoznam"),
+    "show_on_map" : MessageLookupByLibrary.simpleMessage("Zobrazit mapu"),
     "sign_in_disabled_user" : MessageLookupByLibrary.simpleMessage("Uživatel je vypnutej"),
     "sign_in_no_user" : MessageLookupByLibrary.simpleMessage("Uživatel neexistuje"),
     "sign_in_wrong_email" : MessageLookupByLibrary.simpleMessage("Zadaný email není validný"),

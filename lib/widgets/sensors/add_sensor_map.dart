@@ -1,10 +1,8 @@
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:latlong/latlong.dart';
 
 class AddSensorMap extends StatefulWidget {
@@ -13,13 +11,13 @@ class AddSensorMap extends StatefulWidget {
   final Function _refreshMap;
   final String _placemark;
 
-  const AddSensorMap(
-      {Key key,
-      @required double latitude,
-      @required double longitude,
-      @required Function refreshMap,
-      @required String placemark})
-      : this._latitude = latitude,
+  const AddSensorMap({
+    Key key,
+    @required double latitude,
+    @required double longitude,
+    @required Function refreshMap,
+    @required String placemark,
+  })  : this._latitude = latitude,
         this._longitude = longitude,
         this._refreshMap = refreshMap,
         this._placemark = placemark,
@@ -67,12 +65,19 @@ class _AddSensorMapState extends State<AddSensorMap>
                     MarkerLayerOptions(
                       markers: [
                         Marker(
-                          width: 30.0,
-                          height: 30.0,
+                          width: 22.0,
+                          height: 22.0,
                           point: LatLng(widget._latitude, widget._longitude),
                           builder: (ctx) => Container(
-                            child: FlutterLogo(
-                              key: ObjectKey(Colors.blue),
+                            decoration: BoxDecoration(
+                              color: ColorHelper.white,
+                              borderRadius: BorderRadius.circular(30.0),
+                              border: Border.all(color: ColorHelper.darkBlue),
+                            ),
+                            child: Icon(
+                              Icons.settings_input_antenna_rounded,
+                              color: ColorHelper.darkBlue,
+                              size: 16.0,
                             ),
                           ),
                         ),
@@ -80,7 +85,7 @@ class _AddSensorMapState extends State<AddSensorMap>
                     )
                   ],
                 )
-              : Center(child: Icon(Icons.map, size: 100)),
+              : Center(child: Icon(Icons.map, size: 100.0)),
           Positioned(
             top: 3,
             left: 3,
@@ -93,7 +98,7 @@ class _AddSensorMapState extends State<AddSensorMap>
                 color: widget._placemark != null
                     ? ColorHelper.white
                     : ColorHelper.transparent,
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(30.0),
               ),
               child: Text(
                 widget._placemark == null
@@ -108,7 +113,7 @@ class _AddSensorMapState extends State<AddSensorMap>
             right: 20,
             child: GestureDetector(
               onTap: () async {
-                rotationController.forward(from: 0.0);
+                await rotationController.forward(from: 0.0);
                 widget._refreshMap();
               },
               child: Container(
@@ -117,7 +122,7 @@ class _AddSensorMapState extends State<AddSensorMap>
                   color: widget._placemark != null
                       ? ColorHelper.white
                       : ColorHelper.transparent,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
                 child: RotationTransition(
                   turns:
@@ -125,7 +130,7 @@ class _AddSensorMapState extends State<AddSensorMap>
                   child: Icon(
                     Icons.refresh,
                     color: ColorHelper.darkBlue,
-                    size: 30,
+                    size: 30.0,
                   ),
                 ),
               ),

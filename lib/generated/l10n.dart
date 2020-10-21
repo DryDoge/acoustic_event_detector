@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -558,6 +560,26 @@ class S {
     return Intl.message(
       'Please fill location',
       name: 'sensor_map_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show map`
+  String get show_on_map {
+    return Intl.message(
+      'Show map',
+      name: 'show_on_map',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show list`
+  String get show_list {
+    return Intl.message(
+      'Show list',
+      name: 'show_list',
       desc: '',
       args: [],
     );
