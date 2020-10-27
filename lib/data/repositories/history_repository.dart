@@ -71,7 +71,6 @@ class HistoryRepository {
       happened: DateTime.now(),
       centerLatitude: centerLatitude,
       centerLongitude: centerLongitude,
-      sensorsCount: sensors.length,
     );
 
     sensors.forEach((element) {

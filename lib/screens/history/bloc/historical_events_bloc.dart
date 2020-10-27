@@ -43,20 +43,11 @@ class HistoricalEventsBloc
 
     if (event is DeleteHistoricalEvent) {
       yield HistoricalEventsLoading();
-
       try {
-        print(event.eventToBeDeleted);
         final deleted = await historyRepository.deleteHistoricalEvent(
             eventId: event.eventToBeDeleted.id);
-
         if (deleted) {
           yield HistoricalEventsDeleted();
-          await _subscription?.cancel();
-          _subscription = historyRepository.oldEvents.listen(
-            (QuerySnapshot _snapshot) => add(
-              _HistoricalEventsLoaded(_snapshot.oldEventsFromSnapshot),
-            ),
-          );
         }
       } catch (error) {
         yield HistoricalEventsError(message: error.toString());

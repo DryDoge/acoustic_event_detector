@@ -54,5 +54,8 @@
   "sensor_delete_question": "Naozaj chcete smazat senzor?",
   "sensor_map_location": "Pro zobrazení mapy, vyplňte polohu",
   "show_on_map": "Zobrazit mapu",
-  "show_list": "Zobrazit zoznam"
+  "show_list": "Zobrazit zoznam",
+  "date": "Dátum",
+  "time": "Čas",
+  "possible_address": "Približná adresa"
 }

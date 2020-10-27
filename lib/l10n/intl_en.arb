@@ -54,5 +54,8 @@
   "sensor_delete_question": "Are you sure?",
   "sensor_map_location": "Please fill location",
   "show_on_map": "Show map",
-  "show_list": "Show list"
+  "show_list": "Show list",
+  "date": "Date",
+  "time": "Time",
+  "possible_address": "Possible address"
 }
