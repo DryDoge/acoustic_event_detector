@@ -52,3 +52,25 @@ class HistoricalEventsError extends HistoricalEventsState {
 class HistoricalEventsDeleted extends HistoricalEventsState {
   const HistoricalEventsDeleted();
 }
+
+class HistoricalEventDetail extends HistoricalEventsState {
+  final HistoricalEvent event;
+  final List<HistoricalEventSensor> sensors;
+
+  HistoricalEventDetail({this.event, this.sensors});
+
+  @override
+  List<Object> get props => [event, sensors];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is HistoricalEventDetail &&
+        o.event == event &&
+        listEquals(o.sensors, sensors);
+  }
+
+  @override
+  int get hashCode => event.hashCode ^ sensors.hashCode;
+}

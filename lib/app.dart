@@ -61,7 +61,7 @@ class App extends StatelessWidget {
                 BlocProvider<HistoricalEventsBloc>(
                   create: (context) => HistoricalEventsBloc(
                       historyRepository: HistoryRepository()),
-                )
+                ),
               ],
               child: ScreenWrapper(),
             );

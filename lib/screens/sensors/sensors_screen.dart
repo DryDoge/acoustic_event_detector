@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
-import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
 class SensorsScreen extends StatefulWidget {
@@ -24,6 +24,7 @@ class SensorsScreen extends StatefulWidget {
   })  : this._userRights = userRights,
         this._setMap = setMap,
         super(key: key);
+
   @override
   _SensorsScreenState createState() => _SensorsScreenState();
 }

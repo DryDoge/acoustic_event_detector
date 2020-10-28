@@ -51,11 +51,14 @@
   "save": "Save",
   "clear": "Clear",
   "create": "Create",
-  "sensor_delete_question": "Are you sure?",
+  "delete_question": "Are you sure?",
   "sensor_map_location": "Please fill location",
   "show_on_map": "Show map",
   "show_list": "Show list",
   "date": "Date",
   "time": "Time",
-  "possible_address": "Possible address"
+  "possible_address": "Possible address",
+  "exit_app": "Exit application",
+  "exit_app_message": "Do you really want to exit an application?",
+  "delete_event": "Delete the event"
 }

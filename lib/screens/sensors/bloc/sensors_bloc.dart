@@ -8,6 +8,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 part 'sensors_event.dart';
+
 part 'sensors_state.dart';
 
 class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {

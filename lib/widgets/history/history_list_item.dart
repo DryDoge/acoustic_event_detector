@@ -1,13 +1,12 @@
 import 'package:acoustic_event_detector/data/models/historical_event.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
-import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/string_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
-import 'package:acoustic_event_detector/widgets/history/Info_row.dart';
+import 'package:acoustic_event_detector/widgets/history/info_history_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -34,7 +33,7 @@ class HistoryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _getPlacemark(_event),
-      builder: (context, AsyncSnapshot<Placemark> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<Placemark> snapshot) {
         if (snapshot.hasError) {
           return Center(
             child: Column(
@@ -45,18 +44,28 @@ class HistoryListItem extends StatelessWidget {
             ),
           );
         }
-
-        if (snapshot.connectionState != ConnectionState.done) {
+        if (!snapshot.hasData) {
           return Center(
             child: CustomCircularIndicator(),
           );
         }
+        final Placemark _placemark = snapshot.data;
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () async {
+              final List<HistoricalEventSensor> sensors =
+                  await BlocProvider.of<HistoricalEventsBloc>(context)
+                      .historyRepository
+                      .getHistoricalEventSensors(eventId: _event.id);
 
-        if (snapshot.hasData) {
-          final Placemark _placemark = snapshot.data;
-          print(_placemark?.subLocality);
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+              BlocProvider.of<HistoricalEventsBloc>(context).add(
+                HistoricalEventDetailRequested(
+                  event: _event,
+                  sensors: sensors,
+                ),
+              );
+            },
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
@@ -64,60 +73,43 @@ class HistoryListItem extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    InfoHistoryRow(
+                      title:
+                          '${StringHelper.getDate(_event.happened)} - ${StringHelper.getTime(_event.happened)}',
+                      subtitle: '${S.current.date} & ${S.current.time}: ',
+                    ),
+                    InfoHistoryRow(
+                      title: _event.centerLatitude.toStringAsFixed(5),
+                      subtitle: '${S.current.latitude}: ',
+                    ),
+                    InfoHistoryRow(
+                      title: _event.centerLongitude.toStringAsFixed(5),
+                      subtitle: '${S.current.longitude}: ',
+                    ),
+                    Text(
+                      '${S.current.possible_address}: ',
+                      style: Styles.mediumBlueRegular16,
+                    ),
+                    Wrap(
                       children: [
-                        InfoRow(
-                          title: StringHelper.getDate(_event.happened),
-                          subtitle: '${S.current.date}: ',
+                        Text(
+                          '${_placemark?.street}, ',
+                          style: Styles.darkBlueBold18,
                         ),
-                        InfoRow(
-                          title: StringHelper.getTime(_event.happened),
-                          subtitle: '${S.current.time}: ',
+                        Text(
+                          '${_placemark.subLocality.length != 0 ? _placemark?.subLocality : _placemark?.locality}',
+                          style: Styles.darkBlueBold18,
                         ),
                       ],
                     ),
-                    InfoRow(
-                      title:
-                          '${_placemark?.street}, ${_placemark.subLocality.length > 2 ? _placemark?.subLocality : _placemark?.locality}',
-                      subtitle: '${S.current.possible_address}: ',
-                    ),
-                    InfoRow(
-                      title: _event.centerLatitude.toStringAsFixed(6),
-                      subtitle: '${S.current.latitude}: ',
-                    ),
-                    InfoRow(
-                      title: _event.centerLongitude.toStringAsFixed(6),
-                      subtitle: '${S.current.longitude}: ',
-                    ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Column(
-                    //       children: [
-                    //         Text('${S.current.latitude}: ',
-                    //             style: Styles.mediumBlueRegular16),
-                    //         Text(_event.centerLatitude.toStringAsFixed(6),
-                    //             style: Styles.darkBlueBold18)
-                    //       ],
-                    //     ),
-                    //     Column(
-                    //       children: [
-                    //         Text('${S.current.longitude}: ',
-                    //             style: Styles.mediumBlueRegular16),
-                    //         Text(_event.centerLongitude.toStringAsFixed(6),
-                    //             style: Styles.darkBlueBold18)
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),
             ),
-          );
-        }
+          ),
+        );
       },
     );
   }

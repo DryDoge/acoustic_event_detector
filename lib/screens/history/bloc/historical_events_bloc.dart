@@ -8,6 +8,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 part 'historical_events_event.dart';
+
 part 'historical_events_state.dart';
 
 class HistoricalEventsBloc
@@ -48,10 +49,31 @@ class HistoricalEventsBloc
             eventId: event.eventToBeDeleted.id);
         if (deleted) {
           yield HistoricalEventsDeleted();
+          await _subscription?.cancel();
+          _subscription = historyRepository.oldEvents.listen(
+            (QuerySnapshot _snapshot) => add(
+              _HistoricalEventsLoaded(_snapshot.oldEventsFromSnapshot),
+            ),
+          );
         }
       } catch (error) {
         yield HistoricalEventsError(message: error.toString());
       }
     }
+
+    if (event is HistoricalEventDetailRequested) {
+      yield HistoricalEventsLoading();
+      try {
+        yield HistoricalEventDetail(sensors: event.sensors, event: event.event);
+      } catch (error) {
+        yield HistoricalEventsError(message: error.toString());
+      }
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

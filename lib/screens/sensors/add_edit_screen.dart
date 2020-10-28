@@ -96,228 +96,246 @@ class _AddEditScreenState extends State<AddEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.isEdit
-            ? widget.canDelete
-                ? '${S.current.update_sensor} ID: ${widget.sensor.id}'
-                : '${S.current.sensor} ID: ${widget.sensor.id}'
-            : S.current.add_sensor,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: ColorHelper.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-            widget.isMap
-                ? _sensorsBloc.add(SensorsMapRequested())
-                : _sensorsBloc.add(SensorsRequested());
-          },
-        ),
-      ),
-      floatingActionButton: widget.isEdit && widget.canDelete
-          ? CustomFloatingButton(
-              onPressed: () async {
-                final action = await showDialog(
-                  context: context,
-                  builder: (context) => CustomPlatformAlertDialog(
-                    oneOptionOnly: false,
-                    onlySecondImportant: true,
-                    title: S.current.delete_sensor,
-                    message: Text(
-                      S.current.sensor_delete_question,
-                      style: Styles.defaultGreyRegular14,
-                    ),
-                  ),
-                );
-
-                if (action == CustomAction.First) {
-                  BlocProvider.of<SensorsBloc>(context).add(
-                    DeleteSensor(sensorToBeDeleted: widget.sensor),
-                  );
-                }
-              },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        widget.isMap
+            ? _sensorsBloc.add(SensorsMapRequested())
+            : _sensorsBloc.add(SensorsRequested());
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: widget.isEdit
+                ? widget.canDelete
+                    ? '${S.current.update_sensor} ID: ${widget.sensor.id}'
+                    : '${S.current.sensor} ID: ${widget.sensor.id}'
+                : S.current.add_sensor,
+            leading: IconButton(
               icon: Icon(
-                Icons.delete_forever_outlined,
+                Icons.arrow_back,
                 color: ColorHelper.white,
               ),
-              label: S.current.delete_sensor,
-            )
-          : SizedBox.shrink(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              onPressed: () {
+                Navigator.pop(context);
+                widget.isMap
+                    ? _sensorsBloc.add(SensorsMapRequested())
+                    : _sensorsBloc.add(SensorsRequested());
+              },
             ),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          controller: _controllers[0],
-                          focusNode: _focusNodes[0],
-                          labelText: S.current.id,
-                          inputAction: TextInputAction.next,
-                          onChanged: (String value) {
-                            _id = int.tryParse(value);
-                          },
-                          onFieldSubmitted: (_) {
-                            FocusScope.of(context).requestFocus(_focusNodes[1]);
-                          },
-                          validator: (_) {
-                            return _id == null ? 'Zadajte cele cislo' : null;
-                          },
-                          inputType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ),
+          floatingActionButton: widget.isEdit && widget.canDelete
+              ? CustomFloatingButton(
+                  onPressed: () async {
+                    final action = await showDialog(
+                      context: context,
+                      builder: (context) => CustomPlatformAlertDialog(
+                        oneOptionOnly: false,
+                        onlySecondImportant: true,
+                        title: S.current.delete_sensor,
+                        message: Text(
+                          S.current.delete_question,
+                          style: Styles.defaultGreyRegular14,
+                        ),
+                      ),
+                    );
+
+                    if (action == CustomAction.First) {
+                      BlocProvider.of<SensorsBloc>(context).add(
+                        DeleteSensor(sensorToBeDeleted: widget.sensor),
+                      );
+                    }
+                  },
+                  icon: Icon(
+                    Icons.delete_forever_outlined,
+                    color: ColorHelper.white,
+                  ),
+                  label: S.current.delete_sensor,
+                )
+              : SizedBox.shrink(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Column(
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              controller: _controllers[0],
+                              focusNode: _focusNodes[0],
+                              labelText: S.current.id,
+                              inputAction: TextInputAction.next,
+                              onChanged: (String value) {
+                                _id = int.tryParse(value);
+                              },
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_focusNodes[1]);
+                              },
+                              validator: (_) {
+                                return _id == null
+                                    ? 'Zadajte cele cislo'
+                                    : null;
+                              },
+                              inputType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9]')),
+                              ],
+                            ),
+                            CustomTextField(
+                              controller: _controllers[1],
+                              focusNode: _focusNodes[1],
+                              labelText: S.current.latitude,
+                              inputAction: TextInputAction.next,
+                              onChanged: (String value) {
+                                _latitude = double.tryParse(value);
+                              },
+                              onFieldSubmitted: (_) {
+                                _refreshMap();
+                                FocusScope.of(context)
+                                    .requestFocus(_focusNodes[2]);
+                              },
+                              validator: (_) {
+                                return _latitude == null
+                                    ? 'Zadajte zem sirku cislo'
+                                    : null;
+                              },
+                              inputType: TextInputType.numberWithOptions(
+                                signed: true,
+                                decimal: true,
+                              ),
+                            ),
+                            CustomTextField(
+                              controller: _controllers[2],
+                              focusNode: _focusNodes[2],
+                              labelText: S.current.longitude,
+                              onChanged: (String value) {
+                                _longitude = double.tryParse(value);
+                              },
+                              inputAction: TextInputAction.next,
+                              validator: (_) {
+                                return _longitude == null
+                                    ? 'Zadajte zem dlzku cislo'
+                                    : null;
+                              },
+                              onFieldSubmitted: (_) {
+                                _refreshMap();
+                              },
+                              inputType: TextInputType.numberWithOptions(
+                                signed: true,
+                                decimal: true,
+                              ),
+                            ),
+                            SizedBox(height: 20.0),
                           ],
                         ),
-                        CustomTextField(
-                          controller: _controllers[1],
-                          focusNode: _focusNodes[1],
-                          labelText: S.current.latitude,
-                          inputAction: TextInputAction.next,
-                          onChanged: (String value) {
-                            _latitude = double.tryParse(value);
-                          },
-                          onFieldSubmitted: (_) {
-                            _refreshMap();
-                            FocusScope.of(context).requestFocus(_focusNodes[2]);
-                          },
-                          validator: (_) {
-                            return _latitude == null
-                                ? 'Zadajte zem sirku cislo'
-                                : null;
-                          },
-                          inputType: TextInputType.numberWithOptions(
-                            signed: true,
-                            decimal: true,
-                          ),
+                      ),
+                    ),
+                    Divider(
+                      color: ColorHelper.darkBlue,
+                      indent: 10.0,
+                      endIndent: 10.0,
+                      height: 20.0,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      height: 220.0,
+                      width: double.infinity,
+                      child: FutureBuilder<Placemark>(
+                        future: _getPlacemark(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error'),
+                            );
+                          }
+                          if (snapshot.connectionState !=
+                              ConnectionState.done) {
+                            return Center(child: CustomCircularIndicator());
+                          }
+                          _placemark = snapshot.data;
+                          return AddSensorMap(
+                            latitude: _latitude,
+                            longitude: _longitude,
+                            refreshMap: _refreshMap,
+                            placemark: _placemark == null
+                                ? null
+                                : '${_placemark?.street} ${_placemark?.subLocality}',
+                          );
+                        },
+                      ),
+                    ),
+                    if (widget.canDelete)
+                      RaisedButton.icon(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
-                        CustomTextField(
-                          controller: _controllers[2],
-                          focusNode: _focusNodes[2],
-                          labelText: S.current.longitude,
-                          onChanged: (String value) {
-                            _longitude = double.tryParse(value);
-                          },
-                          inputAction: TextInputAction.next,
-                          validator: (_) {
-                            return _longitude == null
-                                ? 'Zadajte zem dlzku cislo'
-                                : null;
-                          },
-                          onFieldSubmitted: (_) {
-                            _refreshMap();
-                          },
-                          inputType: TextInputType.numberWithOptions(
-                            signed: true,
-                            decimal: true,
-                          ),
+                        color: ColorHelper.darkBlue,
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          color: ColorHelper.white,
+                          size: 24.0,
                         ),
-                        SizedBox(height: 20.0),
-                      ],
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            _sensorsBloc.add(
+                              widget.isEdit
+                                  ? UpdateSensor(
+                                      id: _id,
+                                      latitude: _latitude,
+                                      longitude: _longitude,
+                                      oldSensor: widget.sensor,
+                                      address:
+                                          '${_placemark.street} ${_placemark.subLocality}',
+                                    )
+                                  : AddSensor(
+                                      id: _id,
+                                      latitude: _latitude,
+                                      longitude: _longitude,
+                                      address:
+                                          '${_placemark.street} ${_placemark.subLocality}',
+                                    ),
+                            );
+                          }
+                        },
+                        label: Text(
+                          widget.isEdit ? S.current.save : S.current.create,
+                          style: Styles.whiteRegular18,
+                        ),
+                      ),
+                    FlatButton.icon(
+                      icon: Icon(
+                        Icons.cancel_outlined,
+                        color: ColorHelper.defaultGrey,
+                        size: 18.0,
+                      ),
+                      onPressed: () {
+                        print(widget.isMap);
+                        Navigator.pop(context);
+                        widget.isMap
+                            ? _sensorsBloc.add(SensorsMapRequested())
+                            : _sensorsBloc.add(SensorsRequested());
+                      },
+                      label: Text(
+                        widget.canDelete ? S.current.cancel : S.current.back,
+                        style: Styles.defaultGreyRegular14,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Divider(
-                  color: ColorHelper.darkBlue,
-                  indent: 10,
-                  endIndent: 10,
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  height: 220.0,
-                  width: double.infinity,
-                  child: FutureBuilder<Placemark>(
-                    future: _getPlacemark(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error'),
-                        );
-                      }
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return Center(child: CustomCircularIndicator());
-                      }
-                      _placemark = snapshot.data;
-                      return AddSensorMap(
-                        latitude: _latitude,
-                        longitude: _longitude,
-                        refreshMap: _refreshMap,
-                        placemark: _placemark == null
-                            ? null
-                            : '${_placemark?.street} ${_placemark?.subLocality}',
-                      );
-                    },
-                  ),
-                ),
-                if (widget.canDelete)
-                  RaisedButton.icon(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    color: ColorHelper.darkBlue,
-                    icon: Icon(
-                      Icons.add_circle_outline,
-                      color: ColorHelper.white,
-                      size: 24.0,
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        _sensorsBloc.add(
-                          widget.isEdit
-                              ? UpdateSensor(
-                                  id: _id,
-                                  latitude: _latitude,
-                                  longitude: _longitude,
-                                  oldSensor: widget.sensor,
-                                  address:
-                                      '${_placemark.street} ${_placemark.subLocality}',
-                                )
-                              : AddSensor(
-                                  id: _id,
-                                  latitude: _latitude,
-                                  longitude: _longitude,
-                                  address:
-                                      '${_placemark.street} ${_placemark.subLocality}',
-                                ),
-                        );
-                      }
-                    },
-                    label: Text(
-                      widget.isEdit ? S.current.save : S.current.create,
-                      style: Styles.whiteRegular18,
-                    ),
-                  ),
-                FlatButton.icon(
-                  icon: Icon(
-                    Icons.cancel_outlined,
-                    color: ColorHelper.defaultGrey,
-                    size: 18.0,
-                  ),
-                  onPressed: () {
-                    print(widget.isMap);
-                    Navigator.pop(context);
-                    widget.isMap
-                        ? _sensorsBloc.add(SensorsMapRequested())
-                        : _sensorsBloc.add(SensorsRequested());
-                  },
-                  label: Text(
-                    widget.canDelete ? S.current.cancel : S.current.back,
-                    style: Styles.defaultGreyRegular14,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

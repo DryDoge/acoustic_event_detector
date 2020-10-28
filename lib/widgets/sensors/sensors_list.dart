@@ -18,6 +18,7 @@ class SensorsList extends StatelessWidget {
     @required List<Sensor> sensors,
   })  : this._sensors = sensors,
         super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -57,7 +58,7 @@ class SensorsList extends StatelessWidget {
                     onlySecondImportant: true,
                     title: S.current.delete_sensor,
                     message: Text(
-                      S.current.sensor_delete_question,
+                      S.current.delete_question,
                       style: Styles.defaultGreyRegular14,
                     ),
                   ),

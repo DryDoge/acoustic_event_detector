@@ -18,61 +18,72 @@ class SensorsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 8.0),
+      width: double.infinity,
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: ListTile(
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  'ID: ${_sensor.id}',
-                  style: Styles.darkBlueBold16,
-                ),
-                Icon(
-                  Icons.settings_input_antenna_outlined,
-                  color: ColorHelper.darkBlue,
-                  size: 24.0,
-                ),
-              ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: 60.0,
+              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, top: 8.0),
+              child: Column(
+                children: [
+                  Text(
+                    'ID: ${_sensor.id}',
+                    style: Styles.darkBlueBold16,
+                  ),
+                  SizedBox(height: 4.0),
+                  Icon(
+                    Icons.settings_input_antenna_outlined,
+                    color: ColorHelper.darkBlue,
+                    size: 24.0,
+                  ),
+                ],
+              ),
             ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _sensor?.address ?? '',
-                  style: Styles.darkBlueRegular16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${S.current.latitude}:',
-                      style: Styles.defaultGreyRegular14,
-                    ),
-                    Text(
-                      _sensor?.latitude?.toStringAsFixed(5) ?? '',
-                      style: Styles.mediumBlueRegular14,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${S.current.longitude}:',
-                      style: Styles.defaultGreyRegular14,
-                    ),
-                    Text(
-                      _sensor?.longitude?.toStringAsFixed(5) ?? '',
-                      style: Styles.mediumBlueRegular14,
-                    ),
-                  ],
-                ),
-              ],
+            SizedBox(width: 8.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    _sensor?.address ?? '',
+                    style: Styles.darkBlueRegular16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${S.current.latitude}:',
+                        style: Styles.defaultGreyRegular14,
+                      ),
+                      Text(
+                        _sensor?.latitude?.toStringAsFixed(5) ?? '',
+                        style: Styles.mediumBlueRegular14,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${S.current.longitude}:',
+                        style: Styles.defaultGreyRegular14,
+                      ),
+                      Text(
+                        _sensor?.longitude?.toStringAsFixed(5) ?? '',
+                        style: Styles.mediumBlueRegular14,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            trailing: IconButton(
+            IconButton(
               icon: Icon(
                 Icons.edit_outlined,
                 color: ColorHelper.mediumBlue,
@@ -87,7 +98,7 @@ class SensorsListItem extends StatelessWidget {
                 );
               },
             ),
-          ),
+          ],
         ),
       ),
     );

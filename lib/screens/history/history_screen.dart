@@ -1,20 +1,38 @@
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
+import 'package:acoustic_event_detector/screens/history/history_detail_screen.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/history/history_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
+  final int _userRights;
+
+  const HistoryScreen({
+    Key key,
+    @required int userRights,
+  })  : this._userRights = userRights,
+        super(key: key);
+
+  @override
+  _HistoryScreenState createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  HistoricalEventsBloc _historicalEventsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HistoricalEventsBloc, HistoricalEventsState>(
       builder: (BuildContext context, HistoricalEventsState state) {
-        if (state is HistoricalEventsLoading) {
-          return Center(child: CustomCircularIndicator());
-        }
-
         if (state is HistoricalEventsLoaded) {
           if (state.events.isNotEmpty) {
             return Container(
@@ -32,20 +50,7 @@ class HistoryScreen extends StatelessWidget {
             child: Text('Ziadny event v historii'),
           );
         }
-
-        return Column(
-          children: [
-            Text(state.toString()),
-            Center(
-              child: RaisedButton.icon(
-                onPressed: () => BlocProvider.of<HistoricalEventsBloc>(context)
-                    .add(HistoricalEventsRequested()),
-                icon: Icon(Icons.refresh_outlined),
-                label: Text('Refresh'),
-              ),
-            ),
-          ],
-        );
+        return Center(child: CustomCircularIndicator());
       },
       listener: (BuildContext context, HistoricalEventsState state) {
         if (state is HistoricalEventsError) {
@@ -64,6 +69,22 @@ class HistoryScreen extends StatelessWidget {
             builder: (context) => CustomPlatformAlertDialog(
               title: 'Success',
               message: Text('Event zmazany'),
+            ),
+          );
+        }
+
+        if (state is HistoricalEventDetail) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                child: HistoryDetailScreen(
+                  canDelete: widget._userRights == 1,
+                  event: state.event,
+                  sensors: state.sensors,
+                ),
+                value: _historicalEventsBloc,
+              ),
             ),
           );
         }

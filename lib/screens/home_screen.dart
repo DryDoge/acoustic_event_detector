@@ -7,7 +7,9 @@ import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/sensors_screen.dart';
 import 'package:acoustic_event_detector/screens/user/user_screen.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
+import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/user/logout_appbar_action.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   HistoricalEventsBloc _historicalEventsBloc;
 
   @override
+  void dispose() {
+    super.dispose();
+    _sensorsBloc.close();
+    _historicalEventsBloc.close();
+  }
+
+  @override
   void initState() {
     super.initState();
     _user = Provider.of<User>(context, listen: false);
@@ -42,12 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return EventScreen();
       case 1:
-        return SensorsScreen(
-          userRights: _user.rights,
-          setMap: () => _isMap = !_isMap,
+        return BlocProvider.value(
+          value: _sensorsBloc,
+          child: SensorsScreen(
+            userRights: _user.rights,
+            setMap: () => _isMap = !_isMap,
+          ),
         );
       case 2:
-        return HistoryScreen();
+        return BlocProvider.value(
+          value: _historicalEventsBloc,
+          child: HistoryScreen(userRights: _user.rights),
+        );
       case 3:
         return UserScreen(
           addUser: _addUserMenuEnabled,
@@ -150,8 +165,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: ColorHelper.darkBlue,
+    return WillPopScope(
+      onWillPop: () async {
+        final action = await showDialog(
+          context: context,
+          builder: (context) => CustomPlatformAlertDialog(
+            oneOptionOnly: false,
+            onlySecondImportant: true,
+            title: S.current.exit_app,
+            message: Text(
+              S.current.exit_app_message,
+              style: Styles.defaultGreyRegular14,
+            ),
+          ),
+        );
+
+        if (action == CustomAction.First) {
+          return true;
+        }
+        return false;
+      },
       child: SafeArea(
         child: Scaffold(
           appBar: _appBar,

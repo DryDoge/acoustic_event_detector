@@ -546,10 +546,10 @@ class S {
   }
 
   /// `Are you sure?`
-  String get sensor_delete_question {
+  String get delete_question {
     return Intl.message(
       'Are you sure?',
-      name: 'sensor_delete_question',
+      name: 'delete_question',
       desc: '',
       args: [],
     );
@@ -610,6 +610,36 @@ class S {
     return Intl.message(
       'Possible address',
       name: 'possible_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exit application`
+  String get exit_app {
+    return Intl.message(
+      'Exit application',
+      name: 'exit_app',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you really want to exit an application?`
+  String get exit_app_message {
+    return Intl.message(
+      'Do you really want to exit an application?',
+      name: 'exit_app_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete the event`
+  String get delete_event {
+    return Intl.message(
+      'Delete the event',
+      name: 'delete_event',
       desc: '',
       args: [],
     );

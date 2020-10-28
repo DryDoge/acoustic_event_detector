@@ -35,7 +35,9 @@ class _AddSensorMapState extends State<AddSensorMap>
   void initState() {
     super.initState();
     rotationController = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
   }
 
   @override

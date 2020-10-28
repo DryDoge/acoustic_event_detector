@@ -48,3 +48,25 @@ class DeleteHistoricalEvent extends HistoricalEventsEvent {
   @override
   int get hashCode => eventToBeDeleted.hashCode;
 }
+
+class HistoricalEventDetailRequested extends HistoricalEventsEvent {
+  final HistoricalEvent event;
+  final List<HistoricalEventSensor> sensors;
+
+  HistoricalEventDetailRequested({this.event, this.sensors});
+
+  @override
+  List<Object> get props => [event, sensors];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is HistoricalEventDetailRequested &&
+        o.event == event &&
+        listEquals(o.sensors, sensors);
+  }
+
+  @override
+  int get hashCode => event.hashCode ^ sensors.hashCode;
+}
