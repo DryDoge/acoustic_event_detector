@@ -60,5 +60,8 @@
   "possible_address": "Približná adresa",
   "exit_app": "Opustit aplikaci",
   "exit_app_message": "Naozaj chcete odíst z aplikace?",
-  "delete_event": "Smazat událost"
+  "delete_event": "Smazat událost",
+  "sensors_count": "Počet senzorů",
+  "new_event_alert_title":"Byla zaznamenána nová událost",
+  "new_event_alert_message":"Chcete ji zobrazit?"
 }

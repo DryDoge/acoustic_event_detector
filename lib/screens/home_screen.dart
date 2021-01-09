@@ -12,6 +12,7 @@ import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/user/logout_appbar_action.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +20,13 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
+  final FirebaseMessaging fcm = FirebaseMessaging();
 
   static const routeName = '/home';
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 3;
+  int _selectedIndex;
   bool _addUserMenuEnabled = false;
   bool _isMap = false;
   User _user;
@@ -44,6 +46,44 @@ class _HomeScreenState extends State<HomeScreen> {
     _user = Provider.of<User>(context, listen: false);
     _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
     _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
+
+    widget.fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        var a = await showDialog(
+          context: context,
+          builder: (context) => CustomPlatformAlertDialog(
+            title: S.current.new_event_alert_title,
+            message: Text(
+              S.current.new_event_alert_message,
+              style: Styles.defaultGreyRegular14,
+            ),
+            onlyFirstImportant: true,
+            oneOptionOnly: false,
+          ),
+        );
+
+        if (a == CustomAction.First) {
+          _navigateToEventsScreen();
+        }
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        _navigateToEventsScreen();
+      },
+      onResume: (Map<String, dynamic> message) async {
+        _navigateToEventsScreen();
+      },
+    );
+
+    if (_selectedIndex == null) {
+      _selectedIndex = 3;
+    }
+  }
+
+  void _navigateToEventsScreen() {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    setState(() {
+      _selectedIndex = 0;
+    });
   }
 
   Widget get _screenOptions {
@@ -98,13 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return _user.rights == 1
             ? CustomFloatingButton(
-                onPressed: () {
-                  _sensorsBloc.add(AddSensorRequested());
-                },
-                icon: Icon(
-                  Icons.leak_add_rounded,
-                  color: ColorHelper.white,
-                ),
+                onPressed: () => _sensorsBloc.add(AddSensorRequested()),
+                icon: Icon(Icons.leak_add_rounded, color: ColorHelper.white),
                 label: S.current.add_sensor,
               )
             : SizedBox.shrink();
@@ -139,6 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onItemTapped(int index) {
+    if (_selectedIndex == index) {
+      return;
+    }
     if (index == 1) {
       _isMap
           ? _sensorsBloc.add(SensorsMapRequested())

@@ -20,12 +20,17 @@ dependencies:
   equatable: ^1.2.5
   firebase_auth: ^0.18.1+2
   firebase_core: ^0.5.0+1
-  flutter_bloc: ^6.0.10
-  flutter_map: ^0.10.1+1
+  flutter_bloc: ^6.1.0
+  flutter_map: 
+  flutter_map_marker_cluster:
+  user_location:
+    git:
+      url: https://github.com/igaurab/user_location_plugin.git
   geocoding: ^1.0.4+1
   json_annotation: ^3.1.0
   meta: ^1.2.3
   provider: ^4.3.2+2
+  firebase_messaging: ^7.0.3
 
 dev_dependencies:
   flutter_test:

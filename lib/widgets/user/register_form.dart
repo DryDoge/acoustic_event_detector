@@ -66,7 +66,10 @@ class _RegisterFormState extends State<RegisterForm> {
       context: context,
       builder: (_) => CustomPlatformAlertDialog(
         title: title,
-        message: Text(message),
+        message: Text(
+          message,
+          style: Styles.defaultGreyRegular14,
+        ),
       ),
     );
   }

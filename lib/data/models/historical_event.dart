@@ -12,12 +12,15 @@ class HistoricalEvent {
   final double centerLongitude;
   @JsonKey(name: 'timestamp')
   final DateTime happened;
+  @JsonKey(name: 'sensors_count')
+  final int sensorsCount;
 
   HistoricalEvent({
     this.id,
     this.centerLatitude,
     this.centerLongitude,
     this.happened,
+    this.sensorsCount,
   });
 
   factory HistoricalEvent.fromJson(Map<String, dynamic> json) =>

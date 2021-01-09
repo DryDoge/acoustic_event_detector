@@ -14,6 +14,7 @@ HistoricalEvent _$HistoricalEventFromJson(Map<String, dynamic> json) {
     happened: json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String),
+    sensorsCount: json['sensors_count'] as int,
   );
 }
 
@@ -23,6 +24,7 @@ Map<String, dynamic> _$HistoricalEventToJson(HistoricalEvent instance) =>
       'center_lat': instance.centerLatitude,
       'center_lon': instance.centerLongitude,
       'timestamp': instance.happened?.toIso8601String(),
+      'sensors_count': instance.sensorsCount,
     };
 
 HistoricalEventSensor _$HistoricalEventSensorFromJson(

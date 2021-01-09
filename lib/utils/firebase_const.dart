@@ -2,6 +2,7 @@ class FirebaseConst {
   static const String userCollection = 'users';
   static const String sensorsCollection = 'sensors';
   static const String historyCollection = 'history';
+  static const String eventsCollection = 'events';
 
   static const String rightsField = 'rights';
   static const String emailField = 'email';
@@ -12,6 +13,8 @@ class FirebaseConst {
   static const String idField = 'id';
   static const String locationField = 'location';
   static const String timeField = 'happened';
+
+  static const String token = 'events';
 
   static const String errorWrongEmail = "invalid-email";
   static const String errorWrongPass = "wrong-password";

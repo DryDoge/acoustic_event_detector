@@ -644,6 +644,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Count of sensors`
+  String get sensors_count {
+    return Intl.message(
+      'Count of sensors',
+      name: 'sensors_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new event has been recorded`
+  String get new_event_alert_title {
+    return Intl.message(
+      'A new event has been recorded',
+      name: 'new_event_alert_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to view it?`
+  String get new_event_alert_message {
+    return Intl.message(
+      'Do you want to view it?',
+      name: 'new_event_alert_message',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

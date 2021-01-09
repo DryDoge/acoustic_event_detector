@@ -22,7 +22,9 @@ class HistoryListItem extends StatelessWidget {
   Future<Placemark> _getPlacemark(HistoricalEvent event) async {
     if (event.centerLatitude != null && event.centerLongitude != null) {
       final List<Placemark> placemarks = await placemarkFromCoordinates(
-          event.centerLatitude, event.centerLongitude);
+        event.centerLatitude,
+        event.centerLongitude,
+      );
 
       return placemarks.first;
     }
@@ -80,6 +82,9 @@ class HistoryListItem extends StatelessWidget {
                           '${StringHelper.getDate(_event.happened)} - ${StringHelper.getTime(_event.happened)}',
                       subtitle: '${S.current.date} & ${S.current.time}: ',
                     ),
+                    InfoHistoryRow(
+                        title: '${_event.sensorsCount}',
+                        subtitle: '${S.current.sensors_count}: '),
                     InfoHistoryRow(
                       title: _event.centerLatitude.toStringAsFixed(5),
                       subtitle: '${S.current.latitude}: ',

@@ -3,7 +3,6 @@ import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:acoustic_event_detector/widgets/sensors/add_sensor_map.dart';
-import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,38 +123,37 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     : _sensorsBloc.add(SensorsRequested());
               },
             ),
-          ),
-          floatingActionButton: widget.isEdit && widget.canDelete
-              ? CustomFloatingButton(
-                  onPressed: () async {
-                    final action = await showDialog(
-                      context: context,
-                      builder: (context) => CustomPlatformAlertDialog(
-                        oneOptionOnly: false,
-                        onlySecondImportant: true,
-                        title: S.current.delete_sensor,
-                        message: Text(
-                          S.current.delete_question,
-                          style: Styles.defaultGreyRegular14,
-                        ),
+            actions: widget.isEdit && widget.canDelete
+                ? [
+                    IconButton(
+                      icon: Icon(
+                        Icons.delete_forever_outlined,
+                        color: ColorHelper.white,
                       ),
-                    );
+                      onPressed: () async {
+                        final action = await showDialog(
+                          context: context,
+                          builder: (context) => CustomPlatformAlertDialog(
+                            oneOptionOnly: false,
+                            onlySecondImportant: true,
+                            title: S.current.delete_sensor,
+                            message: Text(
+                              S.current.delete_question,
+                              style: Styles.defaultGreyRegular14,
+                            ),
+                          ),
+                        );
 
-                    if (action == CustomAction.First) {
-                      BlocProvider.of<SensorsBloc>(context).add(
-                        DeleteSensor(sensorToBeDeleted: widget.sensor),
-                      );
-                    }
-                  },
-                  icon: Icon(
-                    Icons.delete_forever_outlined,
-                    color: ColorHelper.white,
-                  ),
-                  label: S.current.delete_sensor,
-                )
-              : SizedBox.shrink(),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+                        if (action == CustomAction.First) {
+                          BlocProvider.of<SensorsBloc>(context).add(
+                            DeleteSensor(sensorToBeDeleted: widget.sensor),
+                          );
+                        }
+                      },
+                    )
+                  ]
+                : [],
+          ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

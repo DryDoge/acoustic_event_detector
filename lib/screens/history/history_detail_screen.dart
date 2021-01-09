@@ -5,6 +5,7 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -58,42 +59,14 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
         child: Scaffold(
           body: Stack(
             children: [
-              FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  center: LatLng(widget._event.centerLatitude,
-                      widget._event.centerLongitude),
-                  zoom: 15.0,
-                  maxZoom: 18.0,
-                  minZoom: 13.0,
+              MapWidget(
+                markers: _setSensors(),
+                circles: _setCircles(),
+                center: LatLng(
+                  widget._event.centerLatitude,
+                  widget._event.centerLongitude,
                 ),
-                layers: [
-                  TileLayerOptions(
-                    urlTemplate:
-                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    subdomains: ['a', 'b', 'c'],
-                    // For example purposes. It is recommended to use
-                    // TileProvider with a caching and retry strategy, like
-                    // NetworkTileProvider or CachedNetworkTileProvider
-                    tileProvider: CachedNetworkTileProvider(),
-                  ),
-                  CircleLayerOptions(
-                    circles: [
-                      CircleMarker(
-                        color: ColorHelper.red.withOpacity(0.5),
-                        point: LatLng(
-                          widget._event.centerLatitude,
-                          widget._event.centerLongitude,
-                        ),
-                        radius: 200,
-                        useRadiusInMeter: true,
-                      )
-                    ],
-                  ),
-                  MarkerLayerOptions(
-                    markers: _setSensors(),
-                  ),
-                ],
+                mapController: _mapController,
               ),
               Positioned(
                 top: 4.0,
@@ -117,34 +90,37 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
               ),
               if (widget._canDelete)
                 Align(
-                  alignment: Alignment.bottomCenter,
-                  child: CustomFloatingButton(
-                    onPressed: () async {
-                      final action = await showDialog(
-                        context: context,
-                        builder: (context) => CustomPlatformAlertDialog(
-                          oneOptionOnly: false,
-                          onlySecondImportant: true,
-                          title: S.current.delete_event,
-                          message: Text(
-                            S.current.delete_question,
-                            style: Styles.defaultGreyRegular14,
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomFloatingButton(
+                      onPressed: () async {
+                        final action = await showDialog(
+                          context: context,
+                          builder: (context) => CustomPlatformAlertDialog(
+                            oneOptionOnly: false,
+                            onlySecondImportant: true,
+                            title: S.current.delete_event,
+                            message: Text(
+                              S.current.delete_question,
+                              style: Styles.defaultGreyRegular14,
+                            ),
                           ),
-                        ),
-                      );
-
-                      if (action == CustomAction.First) {
-                        BlocProvider.of<HistoricalEventsBloc>(context).add(
-                          DeleteHistoricalEvent(
-                              eventToBeDeleted: widget._event),
                         );
-                      }
-                    },
-                    icon: Icon(
-                      Icons.delete_forever_outlined,
-                      color: ColorHelper.white,
+
+                        if (action == CustomAction.First) {
+                          BlocProvider.of<HistoricalEventsBloc>(context).add(
+                            DeleteHistoricalEvent(
+                                eventToBeDeleted: widget._event),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        Icons.delete_forever_outlined,
+                        color: ColorHelper.white,
+                      ),
+                      label: S.current.delete_event,
                     ),
-                    label: S.current.delete_event,
                   ),
                 ),
               Padding(
@@ -185,6 +161,20 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
         15.0,
       ),
     );
+  }
+
+  List<CircleMarker> _setCircles() {
+    return [
+      CircleMarker(
+        color: ColorHelper.red.withOpacity(0.5),
+        point: LatLng(
+          widget._event.centerLatitude,
+          widget._event.centerLongitude,
+        ),
+        radius: 200,
+        useRadiusInMeter: true,
+      )
+    ];
   }
 
   List<Marker> _setSensors() {

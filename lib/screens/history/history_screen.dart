@@ -1,6 +1,7 @@
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/history/history_detail_screen.dart';
+import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/history/history_list.dart';
@@ -47,7 +48,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           }
           return Center(
-            child: Text('Ziadny event v historii'),
+            child: Text('No event in history'),
           );
         }
         return Center(child: CustomCircularIndicator());
@@ -58,7 +59,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: S.current.register_error_default,
-              message: Text(state.message),
+              message: Text(
+                state.message,
+                style: Styles.defaultGreyRegular14,
+              ),
             ),
           );
         }
@@ -68,7 +72,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: 'Success',
-              message: Text('Event zmazany'),
+              message: Text('Event deleted'),
             ),
           );
         }

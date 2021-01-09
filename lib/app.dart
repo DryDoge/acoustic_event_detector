@@ -9,6 +9,7 @@ import 'package:acoustic_event_detector/screens/home_screen.dart';
 import 'package:acoustic_event_detector/screens/loading_screen.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,13 +55,13 @@ class App extends StatelessWidget {
                   create: (context) =>
                       AuthCubit(authRepository: AuthRepository()),
                 ),
-                BlocProvider<SensorsBloc>(
-                  create: (context) =>
-                      SensorsBloc(sensorsRepository: SensorsRepository()),
-                ),
                 BlocProvider<HistoricalEventsBloc>(
                   create: (context) => HistoricalEventsBloc(
                       historyRepository: HistoryRepository()),
+                ),
+                BlocProvider<SensorsBloc>(
+                  create: (context) =>
+                      SensorsBloc(sensorsRepository: SensorsRepository()),
                 ),
               ],
               child: ScreenWrapper(),
@@ -83,7 +84,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
   @override
   void initState() {
     super.initState();
-    context.bloc<AuthCubit>().tryToLoginAutomaticly();
+    BlocProvider.of<AuthCubit>(context).tryToLoginAutomaticly();
   }
 
   @override
@@ -108,7 +109,10 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: S.current.register_error_default,
-              message: Text(state.message),
+              message: Text(
+                state.message,
+                style: Styles.defaultGreyRegular14,
+              ),
             ),
           );
         }

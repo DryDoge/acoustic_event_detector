@@ -27,7 +27,7 @@ class _SignInFormState extends State<SignInForm> {
   @override
   void initState() {
     super.initState();
-    _authCubit = context.bloc<AuthCubit>();
+    _authCubit = BlocProvider.of<AuthCubit>(context);
     _focusNodes.forEach((node) {
       node.addListener(() {
         setState(() {});

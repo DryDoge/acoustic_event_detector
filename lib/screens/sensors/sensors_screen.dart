@@ -12,6 +12,7 @@ import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:acoustic_event_detector/widgets/map_widget.dart';
 
 class SensorsScreen extends StatefulWidget {
   final int _userRights;
@@ -77,7 +78,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
             );
           }
           return Center(
-            child: Text('Ziadny sensor'),
+            child: Text('No sensor'),
           );
         }
 
@@ -115,29 +116,9 @@ class _SensorsScreenState extends State<SensorsScreen> {
                   ),
                 )
                 .toList();
-
             return Stack(
               children: [
-                FlutterMap(
-                  options: MapOptions(
-                    center: LatLng(
-                      markers.first.point.latitude,
-                      markers.first.point.longitude,
-                    ),
-                    zoom: 17.0,
-                    maxZoom: 18.0,
-                    minZoom: 11.0,
-                  ),
-                  layers: [
-                    TileLayerOptions(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                      tileProvider: CachedNetworkTileProvider(),
-                    ),
-                    MarkerLayerOptions(markers: markers)
-                  ],
-                ),
+                MapWidget(markers: markers),
                 Positioned(
                   left: 16,
                   bottom: 16,
@@ -157,7 +138,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
             );
           }
           return Center(
-            child: Text('Ziadny sensor'),
+            child: Text('No sensor'),
           );
         }
 
@@ -180,7 +161,10 @@ class _SensorsScreenState extends State<SensorsScreen> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: S.current.register_error_default,
-              message: Text(state.message),
+              message: Text(
+                state.message,
+                style: Styles.defaultGreyRegular14,
+              ),
             ),
           );
         }
@@ -245,7 +229,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
               title: 'Success',
-              message: Text('Sensor zmazany'),
+              message: Text('Sensor deleted'),
             ),
           );
         }

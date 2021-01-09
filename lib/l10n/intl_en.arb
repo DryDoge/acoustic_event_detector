@@ -60,5 +60,8 @@
   "possible_address": "Possible address",
   "exit_app": "Exit application",
   "exit_app_message": "Do you really want to exit an application?",
-  "delete_event": "Delete the event"
+  "delete_event": "Delete the event",
+  "sensors_count": "Count of sensors",
+  "new_event_alert_title":"A new event has been recorded",
+  "new_event_alert_message":"Do you want to view it?"
 }
