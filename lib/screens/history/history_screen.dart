@@ -8,7 +8,7 @@ import 'package:acoustic_event_detector/widgets/history/history_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HistoryScreen extends StatefulWidget {
+class HistoryScreen extends StatelessWidget {
   final int _userRights;
 
   const HistoryScreen({
@@ -16,19 +16,6 @@ class HistoryScreen extends StatefulWidget {
     @required int userRights,
   })  : this._userRights = userRights,
         super(key: key);
-
-  @override
-  _HistoryScreenState createState() => _HistoryScreenState();
-}
-
-class _HistoryScreenState extends State<HistoryScreen> {
-  HistoricalEventsBloc _historicalEventsBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +35,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           }
           return Center(
-            child: Text('No event in history'),
+            child: Text(
+              S.current.no_history_event,
+              style: Styles.darkBlueRegular16,
+            ),
           );
         }
         return Center(child: CustomCircularIndicator());
@@ -58,7 +48,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: S.current.register_error_default,
+              title: S.current.error_default,
               message: Text(
                 state.message,
                 style: Styles.defaultGreyRegular14,
@@ -71,8 +61,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: 'Success',
-              message: Text('Event deleted'),
+              title: S.current.done,
+              message: Text(
+                S.current.event_was_deleted,
+                style: Styles.darkBlueBold16,
+              ),
             ),
           );
         }
@@ -81,13 +74,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                child: HistoryDetailScreen(
-                  canDelete: widget._userRights == 1,
-                  event: state.event,
-                  sensors: state.sensors,
-                ),
-                value: _historicalEventsBloc,
+              builder: (context) => HistoryDetailScreen(
+                canDelete: _userRights == 1,
+                event: state.event,
+                sensors: state.sensors,
               ),
             ),
           );

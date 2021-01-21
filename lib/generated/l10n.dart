@@ -85,6 +85,16 @@ class S {
     );
   }
 
+  /// `Select`
+  String get select {
+    return Intl.message(
+      'Select',
+      name: 'select',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Back`
   String get back {
     return Intl.message(
@@ -376,10 +386,10 @@ class S {
   }
 
   /// `Something went wrong`
-  String get register_error_default {
+  String get error_default {
     return Intl.message(
       'Something went wrong',
-      name: 'register_error_default',
+      name: 'error_default',
       desc: '',
       args: [],
     );
@@ -395,10 +405,10 @@ class S {
     );
   }
 
-  /// `An user wasAn user was not created created`
+  /// `An user was created`
   String get register_success {
     return Intl.message(
-      'An user wasAn user was not created created',
+      'An user was created',
       name: 'register_success',
       desc: '',
       args: [],
@@ -670,6 +680,226 @@ class S {
     return Intl.message(
       'Do you want to view it?',
       name: 'new_event_alert_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh?`
+  String get refresh {
+    return Intl.message(
+      'Refresh?',
+      name: 'refresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address not found\nPlease insert other location`
+  String get no_address_found {
+    return Intl.message(
+      'Address not found\nPlease insert other location',
+      name: 'no_address_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address/location not found`
+  String get no_address_found_short {
+    return Intl.message(
+      'Address/location not found',
+      name: 'no_address_found_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try again?`
+  String get try_refresh {
+    return Intl.message(
+      'Try again?',
+      name: 'try_refresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No event has been saved so far`
+  String get no_history_event {
+    return Intl.message(
+      'No event has been saved so far',
+      name: 'no_history_event',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The sensor was deleted successfully`
+  String get sensor_was_deleted {
+    return Intl.message(
+      'The sensor was deleted successfully',
+      name: 'sensor_was_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The event was deleted successfully`
+  String get event_was_deleted {
+    return Intl.message(
+      'The event was deleted successfully',
+      name: 'event_was_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Done`
+  String get done {
+    return Intl.message(
+      'Done',
+      name: 'done',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insert a number without a decimal point`
+  String get id_error_message {
+    return Intl.message(
+      'Insert a number without a decimal point',
+      name: 'id_error_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insert a latitude (-90.0 - +90.0)`
+  String get latitute_error_message {
+    return Intl.message(
+      'Insert a latitude (-90.0 - +90.0)',
+      name: 'latitute_error_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insert a longitude (-180.0 - +180.0)`
+  String get longitude_error_message {
+    return Intl.message(
+      'Insert a longitude (-180.0 - +180.0)',
+      name: 'longitude_error_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a position on the map`
+  String get pick_on_map {
+    return Intl.message(
+      'Pick a position on the map',
+      name: 'pick_on_map',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a position`
+  String get pick_position {
+    return Intl.message(
+      'Pick a position',
+      name: 'pick_position',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow location sharing`
+  String get allow_share_current_location {
+    return Intl.message(
+      'Allow location sharing',
+      name: 'allow_share_current_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location service is disabled.`
+  String get location_disabled {
+    return Intl.message(
+      'Location service is disabled.',
+      name: 'location_disabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permissions are permantly denied.\nPlease change this in your settings.`
+  String get location_denied_permanently {
+    return Intl.message(
+      'Location permissions are permantly denied.\nPlease change this in your settings.',
+      name: 'location_denied_permanently',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permissions are denied.`
+  String get location_denied {
+    return Intl.message(
+      'Location permissions are denied.',
+      name: 'location_denied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No sensor has bees added so far`
+  String get no_sensor {
+    return Intl.message(
+      'No sensor has bees added so far',
+      name: 'no_sensor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sensor added`
+  String get sensor_added {
+    return Intl.message(
+      'Sensor added',
+      name: 'sensor_added',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sensor edited`
+  String get sensor_edited {
+    return Intl.message(
+      'Sensor edited',
+      name: 'sensor_edited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No position was picked`
+  String get pick_sensor_title {
+    return Intl.message(
+      'No position was picked',
+      name: 'pick_sensor_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to close the map?`
+  String get pick_sensor_message {
+    return Intl.message(
+      'Do you want to close the map?',
+      name: 'pick_sensor_message',
       desc: '',
       args: [],
     );

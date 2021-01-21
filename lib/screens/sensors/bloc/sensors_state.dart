@@ -126,7 +126,12 @@ class SensorDeleted extends SensorsState {
 class SensorsMapLoaded extends SensorsState {
   final List<Sensor> sensors;
 
-  const SensorsMapLoaded({this.sensors});
+  SensorsMapLoaded({
+    this.sensors,
+  });
+
+  @override
+  List<Object> get props => [sensors];
 
   @override
   bool operator ==(Object o) {

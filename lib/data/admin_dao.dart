@@ -18,7 +18,7 @@ class AdminDao {
         FirebaseConst.emailField: email,
         FirebaseConst.rightsField: rights,
       });
-      return Future.value(false);
+      return Future.value(true);
     } catch (e) {
       return Future.value(false);
     }

@@ -40,7 +40,10 @@ class HistoryListItem extends StatelessWidget {
           return Center(
             child: Column(
               children: [
-                Text('Error'),
+                Text(
+                  '${S.current.error_default}\n${S.current.try_refresh}',
+                  style: Styles.darkBlueRegular16,
+                ),
                 RaisedButton(onPressed: () => _getPlacemark(_event)),
               ],
             ),

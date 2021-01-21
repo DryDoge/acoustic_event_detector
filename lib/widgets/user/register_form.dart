@@ -67,7 +67,7 @@ class _RegisterFormState extends State<RegisterForm> {
       builder: (_) => CustomPlatformAlertDialog(
         title: title,
         message: Text(
-          message,
+          message ?? '',
           style: Styles.defaultGreyRegular14,
         ),
       ),
@@ -80,8 +80,8 @@ class _RegisterFormState extends State<RegisterForm> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   S.current.user_create_new_now,
@@ -124,13 +124,11 @@ class _RegisterFormState extends State<RegisterForm> {
       }
     } on CustomException catch (error) {
       Navigator.pop(context);
-      _showErrorDialog(
-        title: error.message,
-      );
+      _showErrorDialog(title: error.message);
     } catch (error) {
       Navigator.pop(context);
       _showErrorDialog(
-        title: S.current.register_error_default,
+        title: S.current.error_default,
         message: S.current.register_info_default,
       );
     }

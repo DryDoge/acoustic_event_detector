@@ -1,6 +1,9 @@
 import 'package:acoustic_event_detector/data/models/sensor.dart';
+import 'package:acoustic_event_detector/screens/sensors/pick_location_screen.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
+import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:acoustic_event_detector/widgets/sensors/add_sensor_map.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,7 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:latlong/latlong.dart';
 
 class AddEditScreen extends StatefulWidget {
   static const routeName = '/add-edit';
@@ -34,7 +38,6 @@ class AddEditScreen extends StatefulWidget {
 }
 
 class _AddEditScreenState extends State<AddEditScreen> {
-  SensorsBloc _sensorsBloc;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final List<FocusNode> _focusNodes = [FocusNode(), FocusNode(), FocusNode()];
@@ -54,9 +57,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
   void initState() {
     super.initState();
     _focusNodes.forEach((node) {
-      node.addListener(() {});
+      node.addListener(() {
+        setState(() {});
+      });
     });
-    _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
     if (widget.sensor != null) {
       _latitude = widget.sensor.latitude;
       _longitude = widget.sensor.longitude;
@@ -77,14 +81,30 @@ class _AddEditScreenState extends State<AddEditScreen> {
   }
 
   void _refreshMap() {
-    _focusNodes.forEach((FocusNode element) {
-      element.unfocus();
-    });
-    setState(() {});
+    if (_formKey.currentState.validate()) {
+      _focusNodes.forEach((FocusNode element) {
+        element.unfocus();
+      });
+      setState(() {});
+    }
+  }
+
+  bool _checkRanges({
+    @required double min,
+    @required double max,
+    @required double value,
+  }) {
+    if (value == null) {
+      return false;
+    }
+    return value <= max && value >= min;
   }
 
   Future<Placemark> _getPlacemark() async {
-    if (_latitude != null && _longitude != null) {
+    if (_latitude != null &&
+        _longitude != null &&
+        _checkRanges(min: -90.0, max: 90.0, value: _latitude) &&
+        _checkRanges(min: -180.0, max: 180.0, value: _longitude)) {
       final List<Placemark> placemarks =
           await placemarkFromCoordinates(_latitude, _longitude);
 
@@ -99,17 +119,19 @@ class _AddEditScreenState extends State<AddEditScreen> {
       onWillPop: () async {
         Navigator.pop(context);
         widget.isMap
-            ? _sensorsBloc.add(SensorsMapRequested())
-            : _sensorsBloc.add(SensorsRequested());
+            ? BlocProvider.of<SensorsBloc>(context, listen: false)
+                .add(SensorsMapRequested())
+            : BlocProvider.of<SensorsBloc>(context, listen: false)
+                .add(SensorsRequested());
         return true;
       },
-      child: SafeArea(
+      child: CustomSafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
             title: widget.isEdit
                 ? widget.canDelete
-                    ? '${S.current.update_sensor} ID: ${widget.sensor.id}'
-                    : '${S.current.sensor} ID: ${widget.sensor.id}'
+                    ? '${S.current.update_sensor} ${S.current.id}: ${widget.sensor.id}'
+                    : '${S.current.sensor} ${S.current.id}: ${widget.sensor.id}'
                 : S.current.add_sensor,
             leading: IconButton(
               icon: Icon(
@@ -119,8 +141,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 widget.isMap
-                    ? _sensorsBloc.add(SensorsMapRequested())
-                    : _sensorsBloc.add(SensorsRequested());
+                    ? BlocProvider.of<SensorsBloc>(context, listen: false)
+                        .add(SensorsMapRequested())
+                    : BlocProvider.of<SensorsBloc>(context, listen: false)
+                        .add(SensorsRequested());
               },
             ),
             actions: widget.isEdit && widget.canDelete
@@ -145,7 +169,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         );
 
                         if (action == CustomAction.First) {
-                          BlocProvider.of<SensorsBloc>(context).add(
+                          Navigator.pop(context);
+                          BlocProvider.of<SensorsBloc>(context, listen: false)
+                              .add(
                             DeleteSensor(sensorToBeDeleted: widget.sensor),
                           );
                         }
@@ -166,7 +192,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     Form(
                       key: _formKey,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
                         child: Column(
                           children: [
                             CustomTextField(
@@ -183,7 +209,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                               },
                               validator: (_) {
                                 return _id == null
-                                    ? 'Zadajte cele cislo'
+                                    ? S.current.id_error_message
                                     : null;
                               },
                               inputType: TextInputType.number,
@@ -192,6 +218,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                     RegExp(r'[0-9]')),
                               ],
                             ),
+                            SizedBox(height: 10.0),
                             CustomTextField(
                               controller: _controllers[1],
                               focusNode: _focusNodes[1],
@@ -201,20 +228,22 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                 _latitude = double.tryParse(value);
                               },
                               onFieldSubmitted: (_) {
-                                _refreshMap();
                                 FocusScope.of(context)
                                     .requestFocus(_focusNodes[2]);
                               },
-                              validator: (_) {
-                                return _latitude == null
-                                    ? 'Zadajte zem sirku cislo'
-                                    : null;
-                              },
+                              validator: (_) => !_checkRanges(
+                                min: -90.0,
+                                max: 90.0,
+                                value: _latitude,
+                              )
+                                  ? S.current.latitute_error_message
+                                  : null,
                               inputType: TextInputType.numberWithOptions(
                                 signed: true,
                                 decimal: true,
                               ),
                             ),
+                            SizedBox(height: 10.0),
                             CustomTextField(
                               controller: _controllers[2],
                               focusNode: _focusNodes[2],
@@ -223,11 +252,13 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                 _longitude = double.tryParse(value);
                               },
                               inputAction: TextInputAction.next,
-                              validator: (_) {
-                                return _longitude == null
-                                    ? 'Zadajte zem dlzku cislo'
-                                    : null;
-                              },
+                              validator: (_) => !_checkRanges(
+                                min: -180.0,
+                                max: 180.0,
+                                value: _longitude,
+                              )
+                                  ? S.current.longitude_error_message
+                                  : null,
                               onFieldSubmitted: (_) {
                                 _refreshMap();
                               },
@@ -236,7 +267,40 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                 decimal: true,
                               ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: 10.0),
+                            _focusNodes[1].hasFocus || _focusNodes[2].hasFocus
+                                ? CustomFloatingButton(
+                                    onPressed: () async {
+                                      final LatLng pickedPlace =
+                                          await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PickLocationScreen(),
+                                        ),
+                                      );
+                                      setState(() {
+                                        _latitude = double.parse(pickedPlace
+                                            .latitude
+                                            .toStringAsFixed(6));
+                                        _longitude = double.parse(pickedPlace
+                                            .longitude
+                                            .toStringAsFixed(6));
+                                        _controllers[1].text = pickedPlace
+                                            .latitude
+                                            .toStringAsFixed(6);
+                                        _controllers[2].text = pickedPlace
+                                            .longitude
+                                            .toStringAsFixed(6);
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.place_rounded,
+                                      color: ColorHelper.white,
+                                    ),
+                                    label: S.current.pick_on_map,
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       ),
@@ -256,7 +320,11 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Center(
-                              child: Text('Error'),
+                              child: Text(
+                                S.current.no_address_found,
+                                style: Styles.defaultGreyRegular16,
+                                textAlign: TextAlign.center,
+                              ),
                             );
                           }
                           if (snapshot.connectionState !=
@@ -270,7 +338,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
                             refreshMap: _refreshMap,
                             placemark: _placemark == null
                                 ? null
-                                : '${_placemark?.street} ${_placemark?.subLocality}',
+                                : _placemark.street == 'Unnamed Road'
+                                    ? S.current.no_address_found_short
+                                    : '${_placemark?.street} ${_placemark?.subLocality}',
                           );
                         },
                       ),
@@ -288,20 +358,25 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            _sensorsBloc.add(
+                            BlocProvider.of<SensorsBloc>(context, listen: false)
+                                .add(
                               widget.isEdit
                                   ? UpdateSensor(
                                       id: _id,
-                                      latitude: _latitude,
-                                      longitude: _longitude,
+                                      latitude: double.parse(
+                                          _latitude.toStringAsFixed(6)),
+                                      longitude: double.parse(
+                                          _longitude.toStringAsFixed(6)),
                                       oldSensor: widget.sensor,
                                       address:
                                           '${_placemark.street} ${_placemark.subLocality}',
                                     )
                                   : AddSensor(
                                       id: _id,
-                                      latitude: _latitude,
-                                      longitude: _longitude,
+                                      latitude: double.parse(
+                                          _latitude.toStringAsFixed(6)),
+                                      longitude: double.parse(
+                                          _longitude.toStringAsFixed(6)),
                                       address:
                                           '${_placemark.street} ${_placemark.subLocality}',
                                     ),
@@ -320,11 +395,16 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         size: 18.0,
                       ),
                       onPressed: () {
-                        print(widget.isMap);
                         Navigator.pop(context);
                         widget.isMap
-                            ? _sensorsBloc.add(SensorsMapRequested())
-                            : _sensorsBloc.add(SensorsRequested());
+                            ? BlocProvider.of<SensorsBloc>(
+                                context,
+                                listen: false,
+                              ).add(SensorsMapRequested())
+                            : BlocProvider.of<SensorsBloc>(
+                                context,
+                                listen: false,
+                              ).add(SensorsRequested());
                       },
                       label: Text(
                         widget.canDelete ? S.current.cancel : S.current.back,

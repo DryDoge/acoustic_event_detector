@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:acoustic_event_detector/data/models/sensor.dart';
 import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
+import 'package:acoustic_event_detector/services/location_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +14,7 @@ part 'sensors_state.dart';
 
 class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
   final SensorsRepository sensorsRepository;
+  final LocationService locationService = LocationService();
   StreamSubscription _subscription;
 
   SensorsBloc({

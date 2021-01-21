@@ -90,8 +90,9 @@ class _AddSensorMapState extends State<AddSensorMap>
               : Center(child: Icon(Icons.map, size: 100.0)),
           Positioned(
             top: 3,
-            left: 3,
+            left: 5,
             child: Container(
+              constraints: BoxConstraints(maxWidth: 240.0),
               padding: const EdgeInsets.symmetric(
                 vertical: 4,
                 horizontal: 6,

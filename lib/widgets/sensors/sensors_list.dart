@@ -24,10 +24,8 @@ class SensorsList extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: _sensors.length,
-      itemBuilder: (context, index) => Provider.of<User>(
-                context,
-                listen: false,
-              ).rights ==
+      itemBuilder: (context, index) => Provider.of<User>(context, listen: false)
+                  .rights ==
               1
           ? Dismissible(
               child: SensorsListItem(sensor: _sensors[index]),

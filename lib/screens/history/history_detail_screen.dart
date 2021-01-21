@@ -3,8 +3,9 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
+import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,13 +51,29 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
-        BlocProvider.of<HistoricalEventsBloc>(context).add(
-          HistoricalEventsRequested(),
-        );
+        BlocProvider.of<HistoricalEventsBloc>(context, listen: false)
+            .add(HistoricalEventsRequested());
         return true;
       },
-      child: SafeArea(
+      child: CustomSafeArea(
         child: Scaffold(
+          floatingActionButton: Container(
+            decoration: BoxDecoration(
+                color: ColorHelper.darkBlue, shape: BoxShape.circle),
+            child: IconButton(
+              icon: RotationTransition(
+                turns: Tween(begin: 0.0, end: 1.0).animate(rotationController),
+                child: Icon(
+                  Icons.my_location_rounded,
+                  color: ColorHelper.white,
+                ),
+              ),
+              onPressed: () async {
+                await rotationController.forward(from: 0.7);
+                _centerMap();
+              },
+            ),
+          ),
           body: Stack(
             children: [
               MapWidget(
@@ -69,83 +86,49 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
                 mapController: _mapController,
               ),
               Positioned(
-                top: 4.0,
-                left: 4.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: ColorHelper.darkBlue, shape: BoxShape.circle),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: ColorHelper.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      BlocProvider.of<HistoricalEventsBloc>(context).add(
-                        HistoricalEventsRequested(),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              if (widget._canDelete)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomFloatingButton(
-                      onPressed: () async {
-                        final action = await showDialog(
-                          context: context,
-                          builder: (context) => CustomPlatformAlertDialog(
-                            oneOptionOnly: false,
-                            onlySecondImportant: true,
-                            title: S.current.delete_event,
-                            message: Text(
-                              S.current.delete_question,
-                              style: Styles.defaultGreyRegular14,
+                child: CustomAppBar(
+                  actions: widget._canDelete
+                      ? [
+                          FlatButton.icon(
+                            label: Text(
+                              S.current.delete_event,
+                              style: Styles.whiteRegular14,
                             ),
-                          ),
-                        );
+                            icon: Icon(
+                              Icons.delete_forever_outlined,
+                              color: ColorHelper.white,
+                            ),
+                            onPressed: () async {
+                              final action = await showDialog(
+                                context: context,
+                                builder: (context) => CustomPlatformAlertDialog(
+                                  oneOptionOnly: false,
+                                  onlySecondImportant: true,
+                                  title: S.current.delete_event,
+                                  message: Text(
+                                    S.current.delete_question,
+                                    style: Styles.defaultGreyRegular14,
+                                  ),
+                                ),
+                              );
 
-                        if (action == CustomAction.First) {
-                          BlocProvider.of<HistoricalEventsBloc>(context).add(
-                            DeleteHistoricalEvent(
-                                eventToBeDeleted: widget._event),
-                          );
-                        }
-                      },
-                      icon: Icon(
-                        Icons.delete_forever_outlined,
-                        color: ColorHelper.white,
-                      ),
-                      label: S.current.delete_event,
-                    ),
-                  ),
+                              if (action == CustomAction.First) {
+                                BlocProvider.of<HistoricalEventsBloc>(
+                                  context,
+                                  listen: false,
+                                ).add(
+                                  DeleteHistoricalEvent(
+                                      eventToBeDeleted: widget._event),
+                                );
+                              }
+                            },
+                          )
+                        ]
+                      : [],
                 ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: ColorHelper.darkBlue, shape: BoxShape.circle),
-                    child: IconButton(
-                      icon: RotationTransition(
-                        turns: Tween(begin: 0.0, end: 1.0)
-                            .animate(rotationController),
-                        child: Icon(
-                          Icons.center_focus_weak,
-                          color: ColorHelper.white,
-                        ),
-                      ),
-                      onPressed: () async {
-                        await rotationController.forward(from: 0.0);
-                        _centerMap();
-                      },
-                    ),
-                  ),
-                ),
+                top: 0.0,
+                left: 0.0,
+                right: 0.0,
               ),
             ],
           ),
@@ -171,7 +154,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
           widget._event.centerLatitude,
           widget._event.centerLongitude,
         ),
-        radius: 200,
+        radius: 100,
         useRadiusInMeter: true,
       )
     ];

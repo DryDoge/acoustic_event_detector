@@ -92,10 +92,10 @@ class AuthRepository {
       String errorMessage;
       switch (error) {
         case FirebaseConst.errorInvalidToken:
-          errorMessage = S.current.register_error_default;
+          errorMessage = S.current.error_default;
           break;
         case FirebaseConst.errorUserNotFound:
-          errorMessage = S.current.register_error_default;
+          errorMessage = S.current.error_default;
           break;
         default:
           errorMessage = error;
@@ -132,6 +132,8 @@ class AuthRepository {
         email: _email,
       );
 
+      print(result);
+
       if (result) {
         return;
       }
@@ -141,6 +143,7 @@ class AuthRepository {
     } else {
       final String error =
           responseData[FirebaseConst.errorField]['message'] as String;
+      print(error);
       String errorMessage;
       switch (error) {
         case FirebaseConst.errorEmailAlreadyExists:
@@ -153,7 +156,7 @@ class AuthRepository {
           errorMessage = S.current.register_too_many_requests_error;
           break;
         default:
-          errorMessage = S.current.register_error_default;
+          errorMessage = S.current.error_default;
       }
       throw CustomException(errorMessage);
     }

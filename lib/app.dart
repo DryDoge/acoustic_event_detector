@@ -21,55 +21,60 @@ class App extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: ColorHelper.darkBlue,
-        unselectedWidgetColor: ColorHelper.defaultGrey,
-        iconTheme: IconThemeData(color: ColorHelper.defaultGrey),
-      ),
-      onGenerateTitle: (context) => S.current.appName,
-      supportedLocales: S.delegate.supportedLocales,
-      localizationsDelegates: [
-        S.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(authRepository: AuthRepository()),
+        ),
+        BlocProvider<HistoricalEventsBloc>(
+          create: (context) =>
+              HistoricalEventsBloc(historyRepository: HistoryRepository()),
+        ),
+        BlocProvider<SensorsBloc>(
+          create: (context) =>
+              SensorsBloc(sensorsRepository: SensorsRepository()),
+        ),
       ],
-      home: FutureBuilder<FirebaseApp>(
-        future: _initialization,
-        builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: RaisedButton.icon(
-                onPressed: () => Firebase.initializeApp(),
-                icon: Icon(Icons.refresh),
-                label: Text('Click to refresh!'),
-              ),
-            );
-          }
+      child: MaterialApp(
+        theme: ThemeData(
+          primaryColor: ColorHelper.darkBlue,
+          cursorColor: ColorHelper.darkBlue,
+          textSelectionColor: ColorHelper.lightBlue,
+          textSelectionHandleColor: ColorHelper.lightBlue,
+          unselectedWidgetColor: ColorHelper.defaultGrey,
+          iconTheme: IconThemeData(color: ColorHelper.defaultGrey),
+        ),
+        onGenerateTitle: (context) => S.current.appName,
+        supportedLocales: S.delegate.supportedLocales,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: FutureBuilder<FirebaseApp>(
+          future: _initialization,
+          builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: RaisedButton.icon(
+                  onPressed: () => Firebase.initializeApp(),
+                  icon: Icon(Icons.refresh),
+                  label: Text(
+                    '${S.current.error_default}\n${S.current.try_refresh}',
+                    style: Styles.darkBlueRegular16,
+                  ),
+                ),
+              );
+            }
 
-          if (snapshot.hasData) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider<AuthCubit>(
-                  create: (context) =>
-                      AuthCubit(authRepository: AuthRepository()),
-                ),
-                BlocProvider<HistoricalEventsBloc>(
-                  create: (context) => HistoricalEventsBloc(
-                      historyRepository: HistoryRepository()),
-                ),
-                BlocProvider<SensorsBloc>(
-                  create: (context) =>
-                      SensorsBloc(sensorsRepository: SensorsRepository()),
-                ),
-              ],
-              child: ScreenWrapper(),
-            );
-          }
+            if (snapshot.hasData) {
+              return ScreenWrapper();
+            }
 
-          return LoadingScreen();
-        },
+            return LoadingScreen();
+          },
+        ),
       ),
     );
   }
@@ -108,7 +113,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: S.current.register_error_default,
+              title: S.current.error_default,
               message: Text(
                 state.message,
                 style: Styles.defaultGreyRegular14,

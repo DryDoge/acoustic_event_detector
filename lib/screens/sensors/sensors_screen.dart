@@ -14,7 +14,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 
-class SensorsScreen extends StatefulWidget {
+class SensorsScreen extends StatelessWidget {
   final int _userRights;
   final Function _setMap;
 
@@ -27,20 +27,8 @@ class SensorsScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  _SensorsScreenState createState() => _SensorsScreenState();
-}
-
-class _SensorsScreenState extends State<SensorsScreen> {
-  SensorsBloc _sensorsBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocConsumer<SensorsBloc, SensorsState>(
       builder: (BuildContext context, SensorsState state) {
         if (state is SensorsLoading ||
@@ -51,34 +39,56 @@ class _SensorsScreenState extends State<SensorsScreen> {
 
         if (state is SensorsLoaded) {
           if (state.sensors.isNotEmpty) {
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: SensorsList(sensors: state.sensors),
-                  ),
-                  Positioned(
-                    left: 16,
-                    bottom: 16,
-                    child: CustomFloatingButton(
-                      onPressed: () {
-                        widget._setMap();
-                        _sensorsBloc.add(SensorsMapRequested());
-                      },
-                      icon: Icon(
-                        Icons.map_outlined,
-                        color: ColorHelper.white,
-                      ),
-                      label: S.current.show_on_map,
+            return Stack(
+              children: [
+                Positioned(
+                  height: size.height * 0.78,
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: SensorsList(sensors: state.sensors),
+                ),
+                Positioned(
+                  bottom: 0.0,
+                  left: 16.0,
+                  child: CustomFloatingButton(
+                    onPressed: () {
+                      _setMap();
+                      BlocProvider.of<SensorsBloc>(context, listen: false)
+                          .add(SensorsMapRequested());
+                    },
+                    icon: Icon(
+                      Icons.map_outlined,
+                      color: ColorHelper.white,
                     ),
+                    label: S.current.show_on_map,
                   ),
-                ],
-              ),
+                ),
+                Positioned(
+                  bottom: 0.0,
+                  right: 16.0,
+                  child: _userRights == 1
+                      ? CustomFloatingButton(
+                          onPressed: () => BlocProvider.of<SensorsBloc>(
+                            context,
+                            listen: false,
+                          ).add(AddSensorRequested()),
+                          icon: Icon(
+                            Icons.leak_add_rounded,
+                            color: ColorHelper.white,
+                          ),
+                          label: S.current.add_sensor,
+                        )
+                      : SizedBox.shrink(),
+                ),
+              ],
             );
           }
           return Center(
-            child: Text('No sensor'),
+            child: Text(
+              S.current.no_sensor,
+              style: Styles.darkBlueRegular16,
+            ),
           );
         }
 
@@ -97,7 +107,9 @@ class _SensorsScreenState extends State<SensorsScreen> {
                         border: Border.all(color: ColorHelper.darkBlue),
                       ),
                       child: GestureDetector(
-                        onTap: () => _sensorsBloc.add(
+                        onTap: () =>
+                            BlocProvider.of<SensorsBloc>(context, listen: false)
+                                .add(
                           UpdateSensorRequested(
                             sensorToBeUpdated: sensor,
                             isMap: true,
@@ -118,14 +130,45 @@ class _SensorsScreenState extends State<SensorsScreen> {
                 .toList();
             return Stack(
               children: [
-                MapWidget(markers: markers),
                 Positioned(
-                  left: 16,
-                  bottom: 16,
+                  height: size.height * 0.78,
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: MapWidget(
+                    markers: markers,
+                    center: markers.first.point,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 240.0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: ColorHelper.white,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        '${S.current.sensors_count}: ${state.sensors.length}',
+                        style: Styles.darkBlueBold14,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0.0,
+                  left: 16.0,
                   child: CustomFloatingButton(
                     onPressed: () {
-                      widget._setMap();
-                      _sensorsBloc.add(SensorsRequested());
+                      _setMap();
+                      BlocProvider.of<SensorsBloc>(context, listen: false)
+                          .add(SensorsRequested());
                     },
                     icon: Icon(
                       Icons.list_outlined,
@@ -134,11 +177,31 @@ class _SensorsScreenState extends State<SensorsScreen> {
                     label: S.current.show_list,
                   ),
                 ),
+                Positioned(
+                  bottom: 0.0,
+                  right: 16.0,
+                  child: _userRights == 1
+                      ? CustomFloatingButton(
+                          onPressed: () => BlocProvider.of<SensorsBloc>(
+                            context,
+                            listen: false,
+                          ).add(AddSensorRequested()),
+                          icon: Icon(
+                            Icons.leak_add_rounded,
+                            color: ColorHelper.white,
+                          ),
+                          label: S.current.add_sensor,
+                        )
+                      : SizedBox.shrink(),
+                ),
               ],
             );
           }
           return Center(
-            child: Text('No sensor'),
+            child: Text(
+              S.current.no_sensor,
+              style: Styles.darkBlueRegular16,
+            ),
           );
         }
 
@@ -147,9 +210,14 @@ class _SensorsScreenState extends State<SensorsScreen> {
             Text(state.toString()),
             Center(
               child: RaisedButton.icon(
-                onPressed: () => _sensorsBloc.add(SensorsRequested()),
+                onPressed: () =>
+                    BlocProvider.of<SensorsBloc>(context, listen: false)
+                        .add(SensorsRequested()),
                 icon: Icon(Icons.refresh_outlined),
-                label: Text('Refresh'),
+                label: Text(
+                  '${S.current.error_default}\n${S.current.try_refresh}',
+                  style: Styles.darkBlueRegular16,
+                ),
               ),
             ),
           ],
@@ -160,7 +228,7 @@ class _SensorsScreenState extends State<SensorsScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: S.current.register_error_default,
+              title: S.current.error_default,
               message: Text(
                 state.message,
                 style: Styles.defaultGreyRegular14,
@@ -173,12 +241,9 @@ class _SensorsScreenState extends State<SensorsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                value: _sensorsBloc,
-                child: AddEditScreen(
-                  isEdit: false,
-                  canDelete: widget._userRights == 1,
-                ),
+              builder: (context) => AddEditScreen(
+                isEdit: false,
+                canDelete: _userRights == 1,
               ),
             ),
           );
@@ -187,14 +252,11 @@ class _SensorsScreenState extends State<SensorsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                value: _sensorsBloc,
-                child: AddEditScreen(
-                  isEdit: true,
-                  canDelete: widget._userRights == 1,
-                  sensor: state.sensorToBeUpdated,
-                  isMap: state.isMap,
-                ),
+              builder: (context) => AddEditScreen(
+                isEdit: true,
+                canDelete: _userRights == 1,
+                sensor: state.sensorToBeUpdated,
+                isMap: state.isMap,
               ),
             ),
           );
@@ -204,9 +266,9 @@ class _SensorsScreenState extends State<SensorsScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: 'Success',
+              title: S.current.sensor_added,
               message: Text(
-                'Sensor id: ${state.addedSensor.id}\nlatitude: ${state.addedSensor.latitude}\nlongitude: ${state.addedSensor.longitude}',
+                'Sensor id: ${state.addedSensor.id}\nlatitude: ${state.addedSensor.latitude.toStringAsFixed(6)}\nlongitude: ${state.addedSensor.longitude.toStringAsFixed(6)}',
               ),
             ),
           );
@@ -216,9 +278,9 @@ class _SensorsScreenState extends State<SensorsScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: 'Success',
+              title: S.current.sensor_edited,
               message: Text(
-                'Sensor id: ${state.updatedSensor.id}\nlatitude: ${state.updatedSensor.latitude}\nlongitude: ${state.updatedSensor.longitude}',
+                'Sensor id: ${state.updatedSensor.id}\nlatitude: ${state.updatedSensor.latitude.toStringAsFixed(6)}\nlongitude: ${state.updatedSensor.longitude.toStringAsFixed(6)}',
               ),
             ),
           );
@@ -228,8 +290,11 @@ class _SensorsScreenState extends State<SensorsScreen> {
           showDialog(
             context: context,
             builder: (context) => CustomPlatformAlertDialog(
-              title: 'Success',
-              message: Text('Sensor deleted'),
+              title: S.current.done,
+              message: Text(
+                S.current.sensor_was_deleted,
+                style: Styles.darkBlueBold16,
+              ),
             ),
           );
         }

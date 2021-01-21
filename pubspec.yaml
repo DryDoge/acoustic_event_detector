@@ -23,14 +23,12 @@ dependencies:
   flutter_bloc: ^6.1.0
   flutter_map: 
   flutter_map_marker_cluster:
-  user_location:
-    git:
-      url: https://github.com/igaurab/user_location_plugin.git
-  geocoding: ^1.0.4+1
+  geocoding: ^1.0.5
   json_annotation: ^3.1.0
   meta: ^1.2.3
   provider: ^4.3.2+2
   firebase_messaging: ^7.0.3
+  geolocator: ^6.1.13
 
 dev_dependencies:
   flutter_test:

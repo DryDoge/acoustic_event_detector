@@ -10,6 +10,7 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/user/logout_appbar_action.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -133,18 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget get _floatingButton {
     switch (_selectedIndex) {
-      case 0:
-        return SizedBox.shrink();
-      case 1:
-        return _user.rights == 1
-            ? CustomFloatingButton(
-                onPressed: () => _sensorsBloc.add(AddSensorRequested()),
-                icon: Icon(Icons.leak_add_rounded, color: ColorHelper.white),
-                label: S.current.add_sensor,
-              )
-            : SizedBox.shrink();
-      case 2:
-        return SizedBox.shrink();
       case 3:
         return !_addUserMenuEnabled && _user.rights == 1
             ? CustomFloatingButton(
@@ -223,8 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return false;
       },
-      child: SafeArea(
+      child: CustomSafeArea(
         child: Scaffold(
+          backgroundColor: ColorHelper.white,
           appBar: _appBar,
           body: _screenOptions,
           bottomNavigationBar: BottomNavigationBar(

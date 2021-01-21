@@ -1,5 +1,5 @@
 class CustomException implements Exception {
-  String message;
+  final String message;
   CustomException(this.message);
 
   @override
