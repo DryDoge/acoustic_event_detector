@@ -69,7 +69,7 @@
   "no_address_found": "Address not found\nPlease insert other location",
   "no_address_found_short": "Address/location not found",
   "try_refresh": "Try again?",
-  "no_history_event": "No event has been saved so far",
+  "no_history_event": "No event has happened so far",
   "sensor_was_deleted":"The sensor was deleted successfully",
   "event_was_deleted":"The event was deleted successfully",
   "done":"Done",
@@ -86,5 +86,7 @@
   "sensor_added" :"Sensor added",
   "sensor_edited": "Sensor edited",
   "pick_sensor_title": "No position was picked",
-  "pick_sensor_message":"Do you want to close the map?"
+  "pick_sensor_message":"Do you want to close the map?",
+  "event_resolve":"Close the event",
+  "close_event_question":"Are you sure?"
 }

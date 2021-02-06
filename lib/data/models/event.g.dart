@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'historical_event.dart';
+part of 'event.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-HistoricalEvent _$HistoricalEventFromJson(Map<String, dynamic> json) {
-  return HistoricalEvent(
+Event _$EventFromJson(Map<String, dynamic> json) {
+  return Event(
     id: json['id'] as String,
     centerLatitude: (json['center_lat'] as num)?.toDouble(),
     centerLongitude: (json['center_lon'] as num)?.toDouble(),
@@ -18,8 +18,7 @@ HistoricalEvent _$HistoricalEventFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$HistoricalEventToJson(HistoricalEvent instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'id': instance.id,
       'center_lat': instance.centerLatitude,
       'center_lon': instance.centerLongitude,
@@ -27,16 +26,14 @@ Map<String, dynamic> _$HistoricalEventToJson(HistoricalEvent instance) =>
       'sensors_count': instance.sensorsCount,
     };
 
-HistoricalEventSensor _$HistoricalEventSensorFromJson(
-    Map<String, dynamic> json) {
-  return HistoricalEventSensor(
+EventSensor _$EventSensorFromJson(Map<String, dynamic> json) {
+  return EventSensor(
     latitude: (json['lat'] as num)?.toDouble(),
     longitude: (json['lon'] as num)?.toDouble(),
   );
 }
 
-Map<String, dynamic> _$HistoricalEventSensorToJson(
-        HistoricalEventSensor instance) =>
+Map<String, dynamic> _$EventSensorToJson(EventSensor instance) =>
     <String, dynamic>{
       'lat': instance.latitude,
       'lon': instance.longitude,

@@ -14,8 +14,6 @@ class FirebaseConst {
   static const String locationField = 'location';
   static const String timeField = 'happened';
 
-  static const String token = 'events';
-
   static const String errorWrongEmail = "invalid-email";
   static const String errorWrongPass = "wrong-password";
   static const String errorNoUser = "user-not-found";

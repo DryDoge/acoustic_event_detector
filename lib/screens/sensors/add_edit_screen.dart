@@ -271,6 +271,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
                             _focusNodes[1].hasFocus || _focusNodes[2].hasFocus
                                 ? CustomFloatingButton(
                                     onPressed: () async {
+                                      _focusNodes.forEach((FocusNode element) {
+                                        element.unfocus();
+                                      });
+
                                       final LatLng pickedPlace =
                                           await Navigator.push(
                                         context,
@@ -279,20 +283,22 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                               PickLocationScreen(),
                                         ),
                                       );
-                                      setState(() {
-                                        _latitude = double.parse(pickedPlace
-                                            .latitude
-                                            .toStringAsFixed(6));
-                                        _longitude = double.parse(pickedPlace
-                                            .longitude
-                                            .toStringAsFixed(6));
-                                        _controllers[1].text = pickedPlace
-                                            .latitude
-                                            .toStringAsFixed(6);
-                                        _controllers[2].text = pickedPlace
-                                            .longitude
-                                            .toStringAsFixed(6);
-                                      });
+                                      if (pickedPlace != null) {
+                                        setState(() {
+                                          _latitude = double.parse(pickedPlace
+                                              .latitude
+                                              .toStringAsFixed(6));
+                                          _longitude = double.parse(pickedPlace
+                                              .longitude
+                                              .toStringAsFixed(6));
+                                          _controllers[1].text = pickedPlace
+                                              .latitude
+                                              .toStringAsFixed(6);
+                                          _controllers[2].text = pickedPlace
+                                              .longitude
+                                              .toStringAsFixed(6);
+                                        });
+                                      }
                                     },
                                     icon: Icon(
                                       Icons.place_rounded,

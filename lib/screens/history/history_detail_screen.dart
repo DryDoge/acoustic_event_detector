@@ -1,4 +1,4 @@
-import 'package:acoustic_event_detector/data/models/historical_event.dart';
+import 'package:acoustic_event_detector/data/models/event.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
@@ -8,20 +8,21 @@ import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dar
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
 class HistoryDetailScreen extends StatefulWidget {
-  final HistoricalEvent _event;
-  final List<HistoricalEventSensor> _sensors;
+  final Event _event;
+  final List<EventSensor> _sensors;
   final bool _canDelete;
 
   const HistoryDetailScreen({
     Key key,
     @required bool canDelete,
-    @required HistoricalEvent event,
-    @required List<HistoricalEventSensor> sensors,
+    @required Event event,
+    @required List<EventSensor> sensors,
   })  : this._canDelete = canDelete,
         this._event = event,
         this._sensors = sensors,
@@ -35,6 +36,8 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
     with TickerProviderStateMixin {
   AnimationController rotationController;
   MapController _mapController;
+  Animation<Color> animationIcon;
+  Animation<Color> animationContainer;
 
   @override
   void initState() {
@@ -44,6 +47,36 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
+    animationContainer = ColorTween(
+      begin: ColorHelper.darkBlue,
+      end: ColorHelper.white,
+    ).animate(rotationController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    animationIcon = ColorTween(
+      begin: ColorHelper.white,
+      end: ColorHelper.darkBlue,
+    ).animate(rotationController)
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
@@ -59,17 +92,19 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
         child: Scaffold(
           floatingActionButton: Container(
             decoration: BoxDecoration(
-                color: ColorHelper.darkBlue, shape: BoxShape.circle),
+              color: animationContainer.value,
+              shape: BoxShape.circle,
+            ),
             child: IconButton(
               icon: RotationTransition(
-                turns: Tween(begin: 0.0, end: 1.0).animate(rotationController),
+                turns: Tween(begin: 0.0, end: 0.7).animate(rotationController),
                 child: Icon(
                   Icons.my_location_rounded,
-                  color: ColorHelper.white,
+                  color: animationIcon.value,
                 ),
               ),
               onPressed: () async {
-                await rotationController.forward(from: 0.7);
+                await rotationController.forward();
                 _centerMap();
               },
             ),
@@ -79,6 +114,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
               MapWidget(
                 markers: _setSensors(),
                 circles: _setCircles(),
+                noClusterMarkers: _setEventPosition(),
                 center: LatLng(
                   widget._event.centerLatitude,
                   widget._event.centerLongitude,
@@ -120,6 +156,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
                                   DeleteHistoricalEvent(
                                       eventToBeDeleted: widget._event),
                                 );
+                                Navigator.pop(context);
                               }
                             },
                           )
@@ -137,13 +174,14 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
     );
   }
 
-  void _centerMap() {
+  void _centerMap() async {
     _mapController.onReady.then(
       (_) => _mapController.move(
         LatLng(widget._event.centerLatitude, widget._event.centerLongitude),
         15.0,
       ),
     );
+    await rotationController.reverse();
   }
 
   List<CircleMarker> _setCircles() {
@@ -163,7 +201,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
   List<Marker> _setSensors() {
     return widget._sensors
         .map(
-          (HistoricalEventSensor sensor) => Marker(
+          (EventSensor sensor) => Marker(
             width: 22.0,
             height: 22.0,
             point: LatLng(sensor.latitude, sensor.longitude),
@@ -181,27 +219,30 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
             ),
           ),
         )
-        .toList()
-          ..add(
-            Marker(
-              width: 22.0,
-              height: 22.0,
-              point: LatLng(
-                widget._event.centerLatitude,
-                widget._event.centerLongitude,
-              ),
-              builder: (ctx) => Container(
-                decoration: BoxDecoration(
-                  color: ColorHelper.red.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: Icon(
-                  Icons.center_focus_strong_rounded,
-                  color: ColorHelper.white,
-                  size: 16.0,
-                ),
-              ),
-            ),
-          );
+        .toList();
+  }
+
+  List<Marker> _setEventPosition() {
+    return [
+      Marker(
+        width: 22.0,
+        height: 22.0,
+        point: LatLng(
+          widget._event.centerLatitude,
+          widget._event.centerLongitude,
+        ),
+        builder: (ctx) => Container(
+          decoration: BoxDecoration(
+            color: ColorHelper.red.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Icon(
+            Icons.center_focus_strong_rounded,
+            color: ColorHelper.white,
+            size: 16.0,
+          ),
+        ),
+      ),
+    ];
   }
 }

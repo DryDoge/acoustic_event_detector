@@ -1,20 +1,20 @@
-part of 'historical_events_bloc.dart';
+part of 'current_events_bloc.dart';
 
-abstract class HistoricalEventsState extends Equatable {
-  const HistoricalEventsState();
+abstract class CurrentEventsState extends Equatable {
+  const CurrentEventsState();
 
   @override
   List<Object> get props => [];
 }
 
-class HistoricalEventsLoading extends HistoricalEventsState {
-  const HistoricalEventsLoading();
+class CurrentEventsLoading extends CurrentEventsState {
+  const CurrentEventsLoading();
 }
 
-class HistoricalEventsLoaded extends HistoricalEventsState {
+class CurrentEventsLoaded extends CurrentEventsState {
   final List<Event> events;
 
-  const HistoricalEventsLoaded({@required this.events});
+  const CurrentEventsLoaded({@required this.events});
 
   @override
   List<Object> get props => [events];
@@ -23,17 +23,17 @@ class HistoricalEventsLoaded extends HistoricalEventsState {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is HistoricalEventsLoaded && listEquals(o.events, events);
+    return o is CurrentEventsLoaded && listEquals(o.events, events);
   }
 
   @override
   int get hashCode => events.hashCode;
 }
 
-class HistoricalEventsError extends HistoricalEventsState {
+class CurrentEventsError extends CurrentEventsState {
   final String message;
 
-  const HistoricalEventsError({@required this.message});
+  const CurrentEventsError({@required this.message});
 
   @override
   List<Object> get props => [message];
@@ -42,22 +42,22 @@ class HistoricalEventsError extends HistoricalEventsState {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is HistoricalEventsError && o.message == message;
+    return o is CurrentEventsError && o.message == message;
   }
 
   @override
   int get hashCode => message.hashCode;
 }
 
-class HistoricalEventsDeleted extends HistoricalEventsState {
-  const HistoricalEventsDeleted();
+class CurrentEventsDeleted extends CurrentEventsState {
+  const CurrentEventsDeleted();
 }
 
-class HistoricalEventDetail extends HistoricalEventsState {
+class CurrentEventDetail extends CurrentEventsState {
   final Event event;
   final List<EventSensor> sensors;
 
-  HistoricalEventDetail({this.event, this.sensors});
+  CurrentEventDetail({this.event, this.sensors});
 
   @override
   List<Object> get props => [event, sensors];
@@ -66,7 +66,7 @@ class HistoricalEventDetail extends HistoricalEventsState {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is HistoricalEventDetail &&
+    return o is CurrentEventDetail &&
         o.event == event &&
         listEquals(o.sensors, sensors);
   }

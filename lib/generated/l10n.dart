@@ -725,10 +725,10 @@ class S {
     );
   }
 
-  /// `No event has been saved so far`
+  /// `No event has happened so far`
   String get no_history_event {
     return Intl.message(
-      'No event has been saved so far',
+      'No event has happened so far',
       name: 'no_history_event',
       desc: '',
       args: [],
@@ -900,6 +900,26 @@ class S {
     return Intl.message(
       'Do you want to close the map?',
       name: 'pick_sensor_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close the event`
+  String get event_resolve {
+    return Intl.message(
+      'Close the event',
+      name: 'event_resolve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure?`
+  String get close_event_question {
+    return Intl.message(
+      'Are you sure?',
+      name: 'close_event_question',
       desc: '',
       args: [],
     );

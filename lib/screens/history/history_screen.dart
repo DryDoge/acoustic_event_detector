@@ -1,10 +1,11 @@
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/history/history_detail_screen.dart';
+import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
-import 'package:acoustic_event_detector/widgets/history/history_list.dart';
+import 'package:acoustic_event_detector/widgets/custom_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,7 +29,10 @@ class HistoryScreen extends StatelessWidget {
               child: Stack(
                 children: [
                   SingleChildScrollView(
-                    child: HistoryList(historicalEvents: state.events),
+                    child: CustomList(
+                      events: state.events,
+                      screenName: FirebaseConst.historyCollection,
+                    ),
                   ),
                 ],
               ),

@@ -1,9 +1,10 @@
 import 'package:acoustic_event_detector/data/repositories/auth_repository.dart';
-import 'package:acoustic_event_detector/data/repositories/history_repository.dart';
+import 'package:acoustic_event_detector/data/repositories/events_repository.dart';
 import 'package:acoustic_event_detector/data/repositories/sensors_repository.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/authenticate/authenticate_screen.dart';
 import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
+import 'package:acoustic_event_detector/screens/event/bloc/current_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/home_screen.dart';
 import 'package:acoustic_event_detector/screens/loading_screen.dart';
@@ -28,12 +29,16 @@ class App extends StatelessWidget {
         ),
         BlocProvider<HistoricalEventsBloc>(
           create: (context) =>
-              HistoricalEventsBloc(historyRepository: HistoryRepository()),
+              HistoricalEventsBloc(eventsRepository: EventsRepository()),
         ),
         BlocProvider<SensorsBloc>(
           create: (context) =>
               SensorsBloc(sensorsRepository: SensorsRepository()),
         ),
+        BlocProvider<CurrentEventsBloc>(
+          create: (context) =>
+              CurrentEventsBloc(eventsRepository: EventsRepository()),
+        )
       ],
       child: MaterialApp(
         theme: ThemeData(

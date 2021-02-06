@@ -1,5 +1,6 @@
 import 'package:acoustic_event_detector/data/models/user.dart';
 import 'package:acoustic_event_detector/generated/l10n.dart';
+import 'package:acoustic_event_detector/screens/event/bloc/current_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/event/event_screen.dart';
 import 'package:acoustic_event_detector/screens/history/bloc/historical_events_bloc.dart';
 import 'package:acoustic_event_detector/screens/history/history_screen.dart';
@@ -33,12 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
   User _user;
   SensorsBloc _sensorsBloc;
   HistoricalEventsBloc _historicalEventsBloc;
+  CurrentEventsBloc _currentEventsBloc;
 
   @override
   void dispose() {
     super.dispose();
     _sensorsBloc.close();
     _historicalEventsBloc.close();
+    _currentEventsBloc.close();
   }
 
   @override
@@ -47,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _user = Provider.of<User>(context, listen: false);
     _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
     _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
+    _currentEventsBloc = BlocProvider.of<CurrentEventsBloc>(context);
 
     widget.fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -90,7 +94,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget get _screenOptions {
     switch (_selectedIndex) {
       case 0:
-        return EventScreen();
+        return BlocProvider.value(
+          value: _currentEventsBloc,
+          child: EventScreen(
+              userRights: _user.rights,
+              goToHistory: () {
+                setState(() {
+                  _selectedIndex = 2;
+                });
+              }),
+        );
       case 1:
         return BlocProvider.value(
           value: _sensorsBloc,
@@ -166,18 +179,30 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_selectedIndex == index) {
       return;
     }
-    if (index == 1) {
-      _isMap
-          ? _sensorsBloc.add(SensorsMapRequested())
-          : _sensorsBloc.add(SensorsRequested());
-    }
 
-    if (index == 2) {
-      _historicalEventsBloc.add(HistoricalEventsRequested());
-    }
-
-    if (index == 3) {
-      _addUserMenuEnabled = false;
+    switch (index) {
+      case 0:
+        {
+          _currentEventsBloc.add(CurrentEventsRequested());
+          break;
+        }
+      case 1:
+        {
+          _isMap
+              ? _sensorsBloc.add(SensorsMapRequested())
+              : _sensorsBloc.add(SensorsRequested());
+          break;
+        }
+      case 2:
+        {
+          _historicalEventsBloc.add(HistoricalEventsRequested());
+          break;
+        }
+      case 3:
+        {
+          _addUserMenuEnabled = false;
+          break;
+        }
     }
     setState(() {
       _selectedIndex = index;

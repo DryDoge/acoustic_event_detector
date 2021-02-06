@@ -69,7 +69,7 @@
   "no_address_found": "Nepodařilo se najít adresu\nProsím zadejte jinou polohu",
   "no_address_found_short": "Neznáma poloha/adresa",
   "try_refresh": "Skusit načíst ještě jednou?",
-  "no_history_event": "Zatím nebyla žádna událost zaznamenána",
+  "no_history_event": "Momentálně žádna událost neprobíha",
   "sensor_was_deleted":"Sensor byl úspěšne smazán",
   "event_was_deleted":"Udalost byla úspěšne smazána",
   "done":"Hotovo",
@@ -86,5 +86,7 @@
   "sensor_added" :"Sensor přidán",
   "sensor_edited": "Sensor upraven",
   "pick_sensor_title": "Nebyla vybrána žádna poloha",
-  "pick_sensor_message":"Chcete zavřít mapu?"
+  "pick_sensor_message":"Chcete zavřít mapu?",
+  "event_resolve":"Zavřít událost",
+  "close_event_question":"Naozaj uzavřít?"
 }

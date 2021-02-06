@@ -1,11 +1,11 @@
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class InfoHistoryRow extends StatelessWidget {
+class CustomInfoRow extends StatelessWidget {
   final String _title;
   final String _subtitle;
 
-  const InfoHistoryRow({
+  const CustomInfoRow({
     Key key,
     @required String title,
     @required String subtitle,

@@ -12,6 +12,7 @@ class MapWidget extends StatefulWidget {
   final MapController _mapController;
   final bool _onTap;
   final PickedLocationBloc _pickedLocationBloc;
+  final List<Marker> _noClusterMarkers;
 
   MapWidget({
     Key key,
@@ -21,12 +22,14 @@ class MapWidget extends StatefulWidget {
     List<CircleMarker> circles,
     bool onTap,
     PickedLocationBloc pickedLocationBloc,
+    List<Marker> noClusterMarkers,
   })  : this._markers = markers ?? [],
         this._center = center,
         this._mapController = mapController ?? MapController(),
         this._circles = circles ?? [],
         this._onTap = onTap ?? false,
         this._pickedLocationBloc = pickedLocationBloc,
+        this._noClusterMarkers = noClusterMarkers ?? [],
         super(key: key);
 
   @override
@@ -72,7 +75,7 @@ class _MapWidgetState extends State<MapWidget> {
                   ];
                 });
               }
-            : null,
+            : (point) {},
         plugins: [
           MarkerClusterPlugin(),
         ],
@@ -95,7 +98,7 @@ class _MapWidgetState extends State<MapWidget> {
         MarkerClusterLayerOptions(
           disableClusteringAtZoom: 17,
           showPolygon: false,
-          maxClusterRadius: 50,
+          maxClusterRadius: 30,
           size: Size(36.0, 36.0),
           fitBoundsOptions: FitBoundsOptions(
             padding: EdgeInsets.all(50),
@@ -109,6 +112,7 @@ class _MapWidgetState extends State<MapWidget> {
             );
           },
         ),
+        MarkerLayerOptions(markers: widget._noClusterMarkers),
       ],
     );
   }

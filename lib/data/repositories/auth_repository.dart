@@ -132,8 +132,6 @@ class AuthRepository {
         email: _email,
       );
 
-      print(result);
-
       if (result) {
         return;
       }

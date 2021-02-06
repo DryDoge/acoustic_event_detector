@@ -12,7 +12,7 @@ class HistoricalEventsRequested extends HistoricalEventsEvent {
 }
 
 class _HistoricalEventsLoaded extends HistoricalEventsEvent {
-  final List<HistoricalEvent> events;
+  final List<Event> events;
 
   _HistoricalEventsLoaded(this.events);
 
@@ -31,7 +31,7 @@ class _HistoricalEventsLoaded extends HistoricalEventsEvent {
 }
 
 class DeleteHistoricalEvent extends HistoricalEventsEvent {
-  final HistoricalEvent eventToBeDeleted;
+  final Event eventToBeDeleted;
 
   const DeleteHistoricalEvent({this.eventToBeDeleted});
 
@@ -50,8 +50,8 @@ class DeleteHistoricalEvent extends HistoricalEventsEvent {
 }
 
 class HistoricalEventDetailRequested extends HistoricalEventsEvent {
-  final HistoricalEvent event;
-  final List<HistoricalEventSensor> sensors;
+  final Event event;
+  final List<EventSensor> sensors;
 
   HistoricalEventDetailRequested({this.event, this.sensors});
 
@@ -63,6 +63,28 @@ class HistoricalEventDetailRequested extends HistoricalEventsEvent {
     if (identical(this, o)) return true;
 
     return o is HistoricalEventDetailRequested &&
+        o.event == event &&
+        listEquals(o.sensors, sensors);
+  }
+
+  @override
+  int get hashCode => event.hashCode ^ sensors.hashCode;
+}
+
+class HistoricalEventAdd extends HistoricalEventsEvent {
+  final Event event;
+  final List<EventSensor> sensors;
+
+  HistoricalEventAdd({this.event, this.sensors});
+
+  @override
+  List<Object> get props => [event, sensors];
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is HistoricalEventAdd &&
         o.event == event &&
         listEquals(o.sensors, sensors);
   }

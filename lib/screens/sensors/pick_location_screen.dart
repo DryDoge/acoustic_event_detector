@@ -8,10 +8,10 @@ import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
@@ -24,6 +24,25 @@ class PickLocationScreen extends StatefulWidget {
 
 class _PickLocationScreenState extends State<PickLocationScreen> {
   PickedLocationBloc _pickedLocationBloc = PickedLocationBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +121,6 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
                 Positioned(
                   child: CustomFloatingButton(
                     onPressed: () async {
-                      print(_pickedLocationBloc.location);
-
                       if (_pickedLocationBloc.location != null) {
                         Navigator.pop(context, _pickedLocationBloc.location);
                       } else {
