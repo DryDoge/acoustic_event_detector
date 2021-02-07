@@ -8,6 +8,7 @@ import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/screens/sensors/sensors_screen.dart';
 import 'package:acoustic_event_detector/screens/user/user_screen.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
+import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
@@ -78,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _navigateToEventsScreen();
       },
     );
+
+    widget.fcm.subscribeToTopic(FirebaseConst.eventsToken);
 
     if (_selectedIndex == null) {
       _selectedIndex = 3;

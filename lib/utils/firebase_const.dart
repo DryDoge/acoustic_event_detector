@@ -27,6 +27,8 @@ class FirebaseConst {
   static const String optionDelete = 'delete';
   static const String optionSignUp = 'signUp';
 
+  static const String eventsToken = 'eventsToken';
+
   static String deleteUrl() {
     return _prepareUrl(optionDelete);
   }
