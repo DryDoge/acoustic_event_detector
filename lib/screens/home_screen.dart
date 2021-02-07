@@ -92,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = 0;
     });
+    _currentEventsBloc.add(CurrentEventsRequested());
   }
 
   Widget get _screenOptions {
