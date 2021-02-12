@@ -77,8 +77,16 @@ class CustomListItem extends StatelessWidget {
                 Text(
                   '${S.current.error_default}\n${S.current.try_refresh}',
                   style: Styles.darkBlueRegular16,
+                  textAlign: TextAlign.center,
                 ),
-                RaisedButton(onPressed: () => _getPlacemark(_event)),
+                SizedBox(height: 10.0),
+                FlatButton(
+                  onPressed: () => _getPlacemark(_event),
+                  child: Text(
+                    S.current.refresh,
+                    style: Styles.defaultGreyRegular14,
+                  ),
+                ),
               ],
             ),
           );

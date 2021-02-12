@@ -33,25 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _addUserMenuEnabled = false;
   bool _isMap = false;
   User _user;
-  SensorsBloc _sensorsBloc;
-  HistoricalEventsBloc _historicalEventsBloc;
-  CurrentEventsBloc _currentEventsBloc;
-
-  @override
-  void dispose() {
-    super.dispose();
-    _sensorsBloc.close();
-    _historicalEventsBloc.close();
-    _currentEventsBloc.close();
-  }
 
   @override
   void initState() {
     super.initState();
     _user = Provider.of<User>(context, listen: false);
-    _sensorsBloc = BlocProvider.of<SensorsBloc>(context);
-    _historicalEventsBloc = BlocProvider.of<HistoricalEventsBloc>(context);
-    _currentEventsBloc = BlocProvider.of<CurrentEventsBloc>(context);
 
     widget.fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -92,35 +78,27 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = 0;
     });
-    _currentEventsBloc.add(CurrentEventsRequested());
+    BlocProvider.of<CurrentEventsBloc>(context, listen: false)
+        .add(CurrentEventsRequested());
   }
 
   Widget get _screenOptions {
     switch (_selectedIndex) {
       case 0:
-        return BlocProvider.value(
-          value: _currentEventsBloc,
-          child: EventScreen(
-              userRights: _user.rights,
-              goToHistory: () {
-                setState(() {
-                  _selectedIndex = 2;
-                });
-              }),
-        );
-      case 1:
-        return BlocProvider.value(
-          value: _sensorsBloc,
-          child: SensorsScreen(
+        return EventScreen(
             userRights: _user.rights,
-            setMap: () => _isMap = !_isMap,
-          ),
+            goToHistory: () {
+              setState(() {
+                _selectedIndex = 2;
+              });
+            });
+      case 1:
+        return SensorsScreen(
+          userRights: _user.rights,
+          setMap: () => _isMap = !_isMap,
         );
       case 2:
-        return BlocProvider.value(
-          value: _historicalEventsBloc,
-          child: HistoryScreen(userRights: _user.rights),
-        );
+        return HistoryScreen(userRights: _user.rights);
       case 3:
         return UserScreen(
           addUser: _addUserMenuEnabled,
@@ -187,19 +165,23 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         {
-          _currentEventsBloc.add(CurrentEventsRequested());
+          BlocProvider.of<CurrentEventsBloc>(context, listen: false)
+              .add(CurrentEventsRequested());
           break;
         }
       case 1:
         {
           _isMap
-              ? _sensorsBloc.add(SensorsMapRequested())
-              : _sensorsBloc.add(SensorsRequested());
+              ? BlocProvider.of<SensorsBloc>(context, listen: false)
+                  .add(SensorsMapRequested())
+              : BlocProvider.of<SensorsBloc>(context, listen: false)
+                  .add(SensorsRequested());
           break;
         }
       case 2:
         {
-          _historicalEventsBloc.add(HistoricalEventsRequested());
+          BlocProvider.of<HistoricalEventsBloc>(context, listen: false)
+              .add(HistoricalEventsRequested());
           break;
         }
       case 3:
