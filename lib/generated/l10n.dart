@@ -855,11 +855,21 @@ class S {
     );
   }
 
-  /// `No sensor has bees added so far`
+  /// `No sensor has been added so far`
   String get no_sensor {
     return Intl.message(
-      'No sensor has bees added so far',
+      'No sensor has been added so far',
       name: 'no_sensor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No event has been resolved so far`
+  String get no_history {
+    return Intl.message(
+      'No event has been resolved so far',
+      name: 'no_history',
       desc: '',
       args: [],
     );

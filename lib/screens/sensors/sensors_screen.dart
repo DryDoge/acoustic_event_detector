@@ -84,11 +84,28 @@ class SensorsScreen extends StatelessWidget {
               ],
             );
           }
-          return Center(
-            child: Text(
-              S.current.no_sensor,
-              style: Styles.darkBlueRegular16,
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  S.current.no_sensor,
+                  style: Styles.darkBlueRegular16,
+                ),
+              ),
+              if (_userRights == 1)
+                CustomFloatingButton(
+                  onPressed: () => BlocProvider.of<SensorsBloc>(
+                    context,
+                    listen: false,
+                  ).add(AddSensorRequested()),
+                  icon: Icon(
+                    Icons.leak_add_rounded,
+                    color: ColorHelper.white,
+                  ),
+                  label: S.current.add_sensor,
+                ),
+            ],
           );
         }
 

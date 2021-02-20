@@ -83,6 +83,7 @@
   "location_denied_permanently": "Zakázali ste sdíleny polohy.\nProsím změnte tohle rozhodnutí v nastaveních.",
   "location_denied" : "Sdílení polohy není povoleno",
   "no_sensor" : "Zatím nebyl přidán žádny senzor",
+  "no_history": "Zatím neboly nic uloženo do historie",
   "sensor_added" :"Sensor přidán",
   "sensor_edited": "Sensor upraven",
   "pick_sensor_title": "Nebyla vybrána žádna poloha",

@@ -27,18 +27,19 @@ class EventScreen extends StatelessWidget {
       builder: (BuildContext context, CurrentEventsState state) {
         if (state is CurrentEventsLoaded) {
           if (state.events.isNotEmpty) {
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: CustomList(
-                      events: state.events,
-                      screenName: FirebaseConst.eventsCollection,
-                    ),
+            return Stack(
+              children: [
+                Positioned(
+                  height: MediaQuery.of(context).size.height * 0.88,
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: CustomList(
+                    events: state.events,
+                    screenName: FirebaseConst.eventsCollection,
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
           return Center(

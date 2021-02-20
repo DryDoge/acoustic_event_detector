@@ -24,23 +24,24 @@ class HistoryScreen extends StatelessWidget {
       builder: (BuildContext context, HistoricalEventsState state) {
         if (state is HistoricalEventsLoaded) {
           if (state.events.isNotEmpty) {
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: CustomList(
-                      events: state.events,
-                      screenName: FirebaseConst.historyCollection,
-                    ),
+            return Stack(
+              children: [
+                Positioned(
+                  height: MediaQuery.of(context).size.height * 0.88,
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: CustomList(
+                    events: state.events,
+                    screenName: FirebaseConst.historyCollection,
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
           return Center(
             child: Text(
-              S.current.no_history_event,
+              S.current.no_history,
               style: Styles.darkBlueRegular16,
             ),
           );

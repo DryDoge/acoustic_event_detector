@@ -137,7 +137,8 @@ class EventsRepository {
   }
 
   List<Event> _processEventData(QuerySnapshot snapshot) =>
-      snapshot.docs.map((data) => Event.fromJson(data.data())).toList();
+      snapshot.docs.map((data) => Event.fromJson(data.data())).toList()
+        ..sort((a, b) => a.happened.compareTo(b.happened));
 
   List<EventSensor> _processEventSensorsData(QuerySnapshot snapshot) =>
       snapshot.docs.map((data) => EventSensor.fromJson(data.data())).toList();

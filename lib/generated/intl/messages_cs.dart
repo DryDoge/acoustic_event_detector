@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no" : MessageLookupByLibrary.simpleMessage("Ne"),
     "no_address_found" : MessageLookupByLibrary.simpleMessage("Nepodařilo se najít adresu\nProsím zadejte jinou polohu"),
     "no_address_found_short" : MessageLookupByLibrary.simpleMessage("Neznáma poloha/adresa"),
+    "no_history" : MessageLookupByLibrary.simpleMessage("Zatím neboly nic uloženo do historie"),
     "no_history_event" : MessageLookupByLibrary.simpleMessage("Momentálně žádna událost neprobíha"),
     "no_sensor" : MessageLookupByLibrary.simpleMessage("Zatím nebyl přidán žádny senzor"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
