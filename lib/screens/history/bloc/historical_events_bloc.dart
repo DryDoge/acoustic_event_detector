@@ -64,11 +64,11 @@ class HistoricalEventsBloc
     if (event is HistoricalEventAdd) {
       try {
         final added = await eventsRepository.addHistoricalEvent(
-          id: event.event.id,
-          centerLatitude: event.event.centerLatitude,
-          centerLongitude: event.event.centerLongitude,
-          sensors: event.sensors,
-        );
+            id: event.event.id,
+            centerLatitude: event.event.centerLatitude,
+            centerLongitude: event.event.centerLongitude,
+            sensors: event.sensors,
+            happened: event.event.happened);
         if (added) {
           await _subscription?.cancel();
           _subscription = eventsRepository.oldEvents.listen(

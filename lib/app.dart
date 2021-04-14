@@ -41,6 +41,7 @@ class App extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: ColorHelper.darkBlue,
           cursorColor: ColorHelper.darkBlue,

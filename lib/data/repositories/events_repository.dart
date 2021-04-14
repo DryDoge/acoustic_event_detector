@@ -41,14 +41,15 @@ class EventsRepository {
     @required double centerLatitude,
     @required double centerLongitude,
     @required List<EventSensor> sensors,
+    @required DateTime happened,
   }) async {
     return await _addEvent(
-      id: id,
-      centerLatitude: centerLatitude,
-      centerLongitude: centerLongitude,
-      sensors: sensors,
-      collection: FirebaseConst.historyCollection,
-    );
+        id: id,
+        centerLatitude: centerLatitude,
+        centerLongitude: centerLongitude,
+        sensors: sensors,
+        collection: FirebaseConst.historyCollection,
+        happened: happened);
   }
 
   Future<bool> deleteHistoricalEvent({
@@ -102,11 +103,12 @@ class EventsRepository {
     @required double centerLongitude,
     @required List<EventSensor> sensors,
     @required String collection,
+    @required DateTime happened,
   }) async {
     final DocumentReference newDoc = _firestore.collection(collection).doc(id);
     final Event newEvent = Event(
       id: id,
-      happened: DateTime.now(),
+      happened: happened,
       centerLatitude: centerLatitude,
       centerLongitude: centerLongitude,
       sensorsCount: sensors.length,
@@ -138,7 +140,7 @@ class EventsRepository {
 
   List<Event> _processEventData(QuerySnapshot snapshot) =>
       snapshot.docs.map((data) => Event.fromJson(data.data())).toList()
-        ..sort((a, b) => a.happened.compareTo(b.happened));
+        ..sort((a, b) => b.happened.compareTo(a.happened));
 
   List<EventSensor> _processEventSensorsData(QuerySnapshot snapshot) =>
       snapshot.docs.map((data) => EventSensor.fromJson(data.data())).toList();
