@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 class AdminDao {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> createUser({
+  Future<bool> setRightsForUser({
     @required String userId,
     @required int rights,
     @required String email,

@@ -4,7 +4,7 @@ import 'package:acoustic_event_detector/screens/event/event_detail_screen.dart';
 import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +55,7 @@ class EventScreen extends StatelessWidget {
         if (state is CurrentEventsError) {
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.error_default,
               message: Text(
                 state.message,
@@ -68,7 +68,7 @@ class EventScreen extends StatelessWidget {
         if (state is CurrentEventsDeleted) {
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.done,
               message: Text(
                 S.current.event_was_deleted,

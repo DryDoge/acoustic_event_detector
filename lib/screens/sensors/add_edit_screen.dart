@@ -2,7 +2,7 @@ import 'package:acoustic_event_detector/data/models/sensor.dart';
 import 'package:acoustic_event_detector/screens/sensors/pick_location_screen.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:acoustic_event_detector/widgets/sensors/add_sensor_map.dart';
@@ -157,7 +157,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                       onPressed: () async {
                         final action = await showDialog(
                           context: context,
-                          builder: (context) => CustomPlatformAlertDialog(
+                          builder: (context) => CustomAlertDialog(
                             oneOptionOnly: false,
                             onlySecondImportant: true,
                             title: S.current.delete_sensor,

@@ -4,7 +4,7 @@ import 'package:acoustic_event_detector/screens/history/bloc/historical_events_b
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +137,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen>
                             onPressed: () async {
                               final action = await showDialog(
                                 context: context,
-                                builder: (context) => CustomPlatformAlertDialog(
+                                builder: (context) => CustomAlertDialog(
                                   oneOptionOnly: false,
                                   onlySecondImportant: true,
                                   title: S.current.delete_event,

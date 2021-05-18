@@ -11,7 +11,7 @@ import 'package:acoustic_event_detector/screens/loading_screen.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -118,7 +118,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
         if (state is AuthError) {
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.error_default,
               message: Text(
                 state.message,

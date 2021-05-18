@@ -126,7 +126,7 @@ class AuthRepository {
       final String _userId = responseData[FirebaseConst.uidField];
       final String _token = responseData[FirebaseConst.tokenField];
 
-      final bool result = await AdminDao().createUser(
+      final bool result = await AdminDao().setRightsForUser(
         userId: _userId,
         rights: rights,
         email: _email,

@@ -3,7 +3,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/sensors/add_edit_screen.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -244,7 +244,7 @@ class SensorsScreen extends StatelessWidget {
         if (state is SensorsError) {
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.error_default,
               message: Text(
                 state.message,
@@ -282,7 +282,7 @@ class SensorsScreen extends StatelessWidget {
           Navigator.pop(context);
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.sensor_added,
               message: Text(
                 'Sensor id: ${state.addedSensor.id}\nlatitude: ${state.addedSensor.latitude.toStringAsFixed(6)}\nlongitude: ${state.addedSensor.longitude.toStringAsFixed(6)}',
@@ -294,7 +294,7 @@ class SensorsScreen extends StatelessWidget {
           Navigator.pop(context);
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.sensor_edited,
               message: Text(
                 'Sensor id: ${state.updatedSensor.id}\nlatitude: ${state.updatedSensor.latitude.toStringAsFixed(6)}\nlongitude: ${state.updatedSensor.longitude.toStringAsFixed(6)}',
@@ -306,7 +306,7 @@ class SensorsScreen extends StatelessWidget {
         if (state is SensorDeleted) {
           showDialog(
             context: context,
-            builder: (context) => CustomPlatformAlertDialog(
+            builder: (context) => CustomAlertDialog(
               title: S.current.done,
               message: Text(
                 S.current.sensor_was_deleted,

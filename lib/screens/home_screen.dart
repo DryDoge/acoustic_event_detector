@@ -11,7 +11,7 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/firebase_const.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/user/logout_appbar_action.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onMessage: (Map<String, dynamic> message) async {
         var a = await showDialog(
           context: context,
-          builder: (context) => CustomPlatformAlertDialog(
+          builder: (context) => CustomAlertDialog(
             title: S.current.new_event_alert_title,
             message: Text(
               S.current.new_event_alert_message,
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: () async {
         final action = await showDialog(
           context: context,
-          builder: (context) => CustomPlatformAlertDialog(
+          builder: (context) => CustomAlertDialog(
             oneOptionOnly: false,
             onlySecondImportant: true,
             title: S.current.exit_app,

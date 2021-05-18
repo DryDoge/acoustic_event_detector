@@ -4,7 +4,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +64,7 @@ class _RegisterFormState extends State<RegisterForm> {
   void _showErrorDialog({@required String title, String message}) {
     showDialog(
       context: context,
-      builder: (_) => CustomPlatformAlertDialog(
+      builder: (_) => CustomAlertDialog(
         title: title,
         message: Text(
           message ?? '',
@@ -101,7 +101,7 @@ class _RegisterFormState extends State<RegisterForm> {
         Navigator.pop(context);
         showDialog(
           context: context,
-          builder: (_) => CustomPlatformAlertDialog(
+          builder: (_) => CustomAlertDialog(
             title: S.current.register_success,
           ),
         );

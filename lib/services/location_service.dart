@@ -5,10 +5,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  Stream<Position> positionStream = Geolocator.getPositionStream(
-      // intervalDuration: Duration(seconds: 10),
-      // distanceFilter: 10,
-      );
+  Stream<Position> positionStream = Geolocator.getPositionStream();
 
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -37,7 +34,7 @@ class LocationService {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<bool> controlPermission() async {
+  Future<bool> checkPermission() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission != LocationPermission.whileInUse &&
         permission != LocationPermission.always) {

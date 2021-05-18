@@ -7,7 +7,7 @@ import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
 import 'package:acoustic_event_detector/widgets/custom_floating_button.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +83,7 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
                         final bool perm = await BlocProvider.of<SensorsBloc>(
                           context,
                           listen: false,
-                        ).locationService.controlPermission();
+                        ).locationService.checkPermission();
                         if (perm) {
                           setState(() {});
                         }
@@ -126,7 +126,7 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
                       } else {
                         CustomAction result = await showDialog(
                           context: context,
-                          builder: (context) => CustomPlatformAlertDialog(
+                          builder: (context) => CustomAlertDialog(
                             title: S.current.pick_sensor_title,
                             message: Text(
                               S.current.pick_sensor_message,

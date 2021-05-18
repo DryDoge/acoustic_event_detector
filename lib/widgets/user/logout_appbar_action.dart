@@ -2,7 +2,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/authenticate/cubit/auth_cubit.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +21,7 @@ class LogoutAppBarAction extends StatelessWidget {
       onPressed: () async {
         final result = await showDialog(
           context: context,
-          builder: (context) => CustomPlatformAlertDialog(
+          builder: (context) => CustomAlertDialog(
             title: S.current.log_out_question,
             oneOptionOnly: false,
             onlySecondImportant: true,

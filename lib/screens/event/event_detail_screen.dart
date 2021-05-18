@@ -6,7 +6,7 @@ import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
 import 'package:acoustic_event_detector/widgets/custom_app_bar.dart';
 import 'package:acoustic_event_detector/widgets/custom_circular_indicator.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/custom_safe_area.dart';
 import 'package:acoustic_event_detector/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
@@ -222,8 +222,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                                     onPressed: () async {
                                       final action = await showDialog(
                                         context: context,
-                                        builder: (context) =>
-                                            CustomPlatformAlertDialog(
+                                        builder: (context) => CustomAlertDialog(
                                           oneOptionOnly: false,
                                           title: S.current.event_resolve,
                                           message: Text(

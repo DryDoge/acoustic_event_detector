@@ -4,7 +4,7 @@ import 'package:acoustic_event_detector/generated/l10n.dart';
 import 'package:acoustic_event_detector/screens/sensors/bloc/sensors_bloc.dart';
 import 'package:acoustic_event_detector/utils/color_helper.dart';
 import 'package:acoustic_event_detector/utils/styles.dart';
-import 'package:acoustic_event_detector/widgets/custom_platform_alert_dialog.dart';
+import 'package:acoustic_event_detector/widgets/custom_alert_dialog.dart';
 import 'package:acoustic_event_detector/widgets/sensors/sensors_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,7 +51,7 @@ class SensorsList extends StatelessWidget {
               onDismissed: (direction) async {
                 final action = await showDialog(
                   context: context,
-                  builder: (context) => CustomPlatformAlertDialog(
+                  builder: (context) => CustomAlertDialog(
                     oneOptionOnly: false,
                     onlySecondImportant: true,
                     title: S.current.delete_sensor,
